@@ -1,7 +1,10 @@
 {
   "pair": {
     "invalid_key": "The offline key must be exactly 32 hexadecimal characters.",
-    "invalid_slot": "The slot must be a number between 0 and 255."
+    "invalid_slot": "The slot must be a number between 0 and 255.",
+    "unknown_device": "Unknown device"
   },
-  "device": { "missing_key": "Offline key/slot missing or invalid. Check the device settings." }
+  "device": {
+    "missing_key": "Offline key/slot missing or invalid. Check the device settings."
+  }
 }
