@@ -1,0 +1,7 @@
+{
+  "pair": {
+    "invalid_key": "Offline-nøkkelen må være nøyaktig 32 heksadesimale tegn.",
+    "invalid_slot": "Slot må være et tall mellom 0 og 255."
+  },
+  "device": { "missing_key": "Offline-nøkkel/slot mangler eller er ugyldig. Sjekk enhetsinnstillingene." }
+}

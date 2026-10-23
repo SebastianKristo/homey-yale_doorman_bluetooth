@@ -1,0 +1,8 @@
+{
+  "name": "no.kristo.yaleble",
+  "version": "1.0.0",
+  "description": "Local Bluetooth control of Yale/August locks",
+  "main": "app.js",
+  "license": "MIT",
+  "engines": { "node": ">=16" }
+}

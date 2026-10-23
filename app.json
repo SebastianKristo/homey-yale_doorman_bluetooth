@@ -1,0 +1,250 @@
+{
+  "id": "no.kristo.yaleble",
+  "version": "1.0.0",
+  "compatibility": ">=12.0.0",
+  "sdk": 3,
+  "platforms": [
+    "local"
+  ],
+  "name": {
+    "en": "Yale Local Bluetooth",
+    "no": "Yale lokal Bluetooth"
+  },
+  "description": {
+    "en": "Control Yale Doorman L3 and other Yale/August locks directly over Bluetooth, without the cloud.",
+    "no": "Styr Yale Doorman L3 og andre Yale/August-låser direkte over Bluetooth, uten sky."
+  },
+  "category": [
+    "security"
+  ],
+  "permissions": [
+    "homey:wireless:ble"
+  ],
+  "brandColor": "#FFD100",
+  "author": {
+    "name": "Sebastian Kristo",
+    "email": "sebastian@kristo.no"
+  },
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png"
+  },
+  "capabilities": {
+    "lock_state": {
+      "type": "enum",
+      "title": {
+        "en": "Lock state",
+        "no": "Låsstatus"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/icon.svg",
+      "values": [
+        {
+          "id": "unknown",
+          "title": {
+            "en": "Unknown",
+            "no": "Ukjent"
+          }
+        },
+        {
+          "id": "calibrating",
+          "title": {
+            "en": "Calibrating",
+            "no": "Kalibrerer"
+          }
+        },
+        {
+          "id": "unlocking",
+          "title": {
+            "en": "Unlocking",
+            "no": "Låser opp"
+          }
+        },
+        {
+          "id": "unlocked",
+          "title": {
+            "en": "Unlocked",
+            "no": "Ulåst"
+          }
+        },
+        {
+          "id": "locking",
+          "title": {
+            "en": "Locking",
+            "no": "Låser"
+          }
+        },
+        {
+          "id": "locked",
+          "title": {
+            "en": "Locked",
+            "no": "Låst"
+          }
+        }
+      ]
+    }
+  },
+  "flow": {
+    "actions": [
+      {
+        "id": "refresh_status",
+        "title": {
+          "en": "Refresh lock status",
+          "no": "Oppdater låsstatus"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=lock"
+          }
+        ]
+      }
+    ]
+  },
+  "drivers": [
+    {
+      "id": "lock",
+      "name": {
+        "en": "Yale lock (Bluetooth)",
+        "no": "Yale-lås (Bluetooth)"
+      },
+      "class": "lock",
+      "capabilities": [
+        "locked",
+        "lock_state",
+        "measure_battery",
+        "alarm_battery"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "ble"
+      ],
+      "images": {
+        "small": "/drivers/lock/assets/images/small.png",
+        "large": "/drivers/lock/assets/images/large.png"
+      },
+      "pair": [
+        {
+          "id": "credentials",
+          "navigation": {
+            "next": "list_devices"
+          }
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Offline key",
+            "no": "Offline-nøkkel"
+          },
+          "children": [
+            {
+              "id": "offline_key",
+              "type": "password",
+              "label": {
+                "en": "Offline key (32 hex chars)",
+                "no": "Offline-nøkkel (32 hex-tegn)"
+              },
+              "value": ""
+            },
+            {
+              "id": "offline_slot",
+              "type": "number",
+              "label": {
+                "en": "Key slot",
+                "no": "Nøkkel-slot"
+              },
+              "value": 1,
+              "min": 0,
+              "max": 255
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Status updates",
+            "no": "Statusoppdatering"
+          },
+          "children": [
+            {
+              "id": "scan_interval",
+              "type": "number",
+              "label": {
+                "en": "Bluetooth scan interval",
+                "no": "Bluetooth-skanneintervall"
+              },
+              "hint": {
+                "en": "Passive check for state changes. 0 = off.",
+                "no": "Passiv sjekk etter endringer. 0 = av."
+              },
+              "value": 30,
+              "min": 0,
+              "max": 3600,
+              "units": {
+                "en": "s"
+              }
+            },
+            {
+              "id": "poll_interval",
+              "type": "number",
+              "label": {
+                "en": "Full poll interval",
+                "no": "Full avlesning, intervall"
+              },
+              "hint": {
+                "en": "Connects to the lock (uses battery). 0 = off.",
+                "no": "Kobler til låsen (bruker batteri). 0 = av."
+              },
+              "value": 60,
+              "min": 0,
+              "max": 1440,
+              "units": {
+                "en": "min"
+              }
+            },
+            {
+              "id": "battery_alarm",
+              "type": "number",
+              "label": {
+                "en": "Low battery alarm below",
+                "no": "Lavt batteri-alarm under"
+              },
+              "value": 20,
+              "min": 0,
+              "max": 100,
+              "units": {
+                "en": "%"
+              }
+            }
+          ]
+        }
+      ],
+      "energy": {
+        "batteries": [
+          "AA",
+          "AA",
+          "AA",
+          "AA"
+        ]
+      }
+    }
+  ]
+}
