@@ -20,14 +20,15 @@
   "permissions": [
     "homey:wireless:ble"
   ],
-  "brandColor": "#FFD100",
+  "brandColor": "#1E3A5F",
   "author": {
     "name": "Sebastian Kristo",
     "email": "sebastian@kristo.no"
   },
   "images": {
     "small": "/assets/images/small.png",
-    "large": "/assets/images/large.png"
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
   },
   "capabilities": {
     "lock_state": {
@@ -39,7 +40,7 @@
       "getable": true,
       "setable": false,
       "uiComponent": "sensor",
-      "icon": "/assets/icon.svg",
+      "icon": "/assets/lock_state.svg",
       "values": [
         {
           "id": "unknown",
@@ -126,7 +127,8 @@
       ],
       "images": {
         "small": "/drivers/lock/assets/images/small.png",
-        "large": "/drivers/lock/assets/images/large.png"
+        "large": "/drivers/lock/assets/images/large.png",
+        "xlarge": "/drivers/lock/assets/images/xlarge.png"
       },
       "pair": [
         {
