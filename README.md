@@ -8,14 +8,27 @@ direkte over Bluetooth fra Homey Pro. Ingen sky, ingen bro.
 - Låsens **offline-nøkkel** (32 hex-tegn) og **slot**.
 
 ## Hente offline-nøkkel og slot
-Nøkkelen ligger ikke i låsen, men i Yale Home-kontoen din:
-1. **Home Assistant:** Legg til Yale-integrasjonen (sky) én gang. Den henter nøklene automatisk og
-   `yalexs_ble` viser dem. Du finner dem i `.storage/core.config_entries` under `yalexs_ble`
-   (`key` og `slot`).
-2. **Python:** biblioteket [`yalexs`](https://github.com/bdraco/yalexs) kan logge inn på Yale Home-kontoen
-   og lese `offline_key` / `offline_slot` fra låsdetaljene.
+Nøkkelen ligger ikke i låsen, men i Yale Home-kontoen din. Yale Home tillater bare innlogging via
+Home Assistant (OAuth), så vi låner Home Assistant midlertidig for å hente den. Det tar ca. 10 minutter.
 
-Tips: Opprett en egen gjestebruker i Yale Home-appen for Homey, så får Homey sin egen slot.
+1. Start Home Assistant i Docker på Macen (Docker Desktop må være installert):
+   ```bash
+   docker run -d --name ha-temp -p 8123:8123 -v ~/ha-temp:/config ghcr.io/home-assistant/home-assistant:stable
+   ```
+2. Åpne http://localhost:8123, opprett en bruker og fullfør oppsettet.
+3. Innstillinger → Enheter og tjenester → Legg til integrasjon → **Yale**. Logg inn med Yale Home-kontoen.
+4. Hent nøkkelen:
+   ```bash
+   node tools/get-offline-key.js ~/ha-temp/.storage/core.config_entries
+   ```
+   Skriptet viser offline-nøkkel og slot for hver lås.
+5. Rydd opp:
+   ```bash
+   docker rm -f ha-temp && rm -rf ~/ha-temp
+   ```
+
+Nøkkelen endres ikke så lenge brukeren beholder tilgangen til låsen, så dette trengs bare én gang.
+Kontoen må være eier eller admin av låsen.
 
 ## Installere
 ```bash
