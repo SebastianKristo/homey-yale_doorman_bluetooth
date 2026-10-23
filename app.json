@@ -248,5 +248,9 @@
         ]
       }
     }
-  ]
+  ],
+  "source": "https://github.com/SebastianKristo/homey-yale_doorman_bluetooth",
+  "bugs": {
+    "url": "https://github.com/SebastianKristo/homey-yale_doorman_bluetooth/issues"
+  }
 }
