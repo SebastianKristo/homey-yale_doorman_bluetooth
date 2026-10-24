@@ -68,7 +68,8 @@ class YaleLockDevice extends Homey.Device {
   // The lock changes its advertised manufacturer data when its state changes.
   // A passive scan is cheap for the lock battery; only connect when it changes.
   async checkAdvertisement() {
-    if (this.busy) return;
+    // Nothing to compare against while busy or without a usable key
+    if (this.busy || !this.lock) return;
     const adv = await this.homey.ble.find(this.getStore().peripheralUuid);
     const md = adv && adv.manufacturerData ? Buffer.from(adv.manufacturerData).toString('hex') : null;
     if (md && this.lastManufacturerData && md !== this.lastManufacturerData) {

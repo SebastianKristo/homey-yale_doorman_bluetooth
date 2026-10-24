@@ -7,6 +7,11 @@
     "en": "First release"
   },
   "1.0.2": {
-    "en": "new fix"
+    "en": "Better lock detection during pairing.",
+    "no": "Bedre gjenkjenning av låsen ved parring."
+  },
+  "1.0.3": {
+    "en": "Smaller app and lower memory use.",
+    "no": "Mindre app og lavere minnebruk."
   }
 }
