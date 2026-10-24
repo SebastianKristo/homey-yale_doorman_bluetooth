@@ -13,5 +13,11 @@
   "1.0.3": {
     "en": "Smaller app and lower memory use.",
     "no": "Mindre app og lavere minnebruk."
+  },
+  "1.1.0": {
+    "en": "new fix"
+  },
+  "1.1.1": {
+    "en": "new fix"
   }
 }
