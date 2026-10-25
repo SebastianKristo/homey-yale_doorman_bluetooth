@@ -103,5 +103,8 @@
   "2.2.0": {
     "en": "Shows who unlocked and how (face, fingerprint, NFC, PIN, Homey). New Flow card \"Unlock for person\", trigger \"Unlocked by person\", and webhook URLs per person and method.",
     "no": "Viser hvem som låste opp og hvordan (ansikt, fingeravtrykk, NFC, PIN, Homey). Nytt Flow-kort «Lås opp for person», trigger «Låst opp av person» og webhook-adresser per person og metode."
+  },
+  "2.2.1": {
+    "en": "multiple webhooks"
   }
 }
