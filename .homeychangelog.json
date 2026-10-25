@@ -84,5 +84,13 @@
   "1.4.1": {
     "en": "Step-by-step help in pairing, with commands to find the offline key and proxy key in Home Assistant.",
     "no": "Steg-for-steg-hjelp i parringen, med kommandoer for å finne offline-nøkkel og proxy-nøkkel i Home Assistant."
+  },
+  "2.0.0": {
+    "en": "ESPHome Bluetooth proxy, Always connected, Flow fallback to the cloud, new icons and help in pairing.",
+    "no": "ESPHome Bluetooth-proxy, Alltid tilkoblet, Flow-reserve via skyen, nye ikoner og hjelp i parringen."
+  },
+  "2.0.1": {
+    "en": "Includes all changes up to 1.4.1 (help in pairing).",
+    "no": "Inneholder alle endringer til og med 1.4.1 (hjelp i parringen)."
   }
 }
