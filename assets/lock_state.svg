@@ -1,7 +1,26 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect x="166" y="40" width="180" height="432" rx="44" fill="none" stroke="#000" stroke-width="28"/>
-  <circle cx="256" cy="110" r="12" fill="#000"/>
-  <circle cx="256" cy="280" r="74" fill="none" stroke="#000" stroke-width="26"/>
-  <rect x="242" y="216" width="28" height="128" rx="14" fill="#000"/>
-  <path d="M226 410h60" stroke="#000" stroke-width="18" stroke-linecap="round"/>
+  <!-- Yale Doorman L3: front plate -->
+  <rect x="160" y="14" width="140" height="484" rx="70" fill="none" stroke="#000" stroke-width="16"/>
+  <!-- end of the black keypad panel -->
+  <path d="M168 336H206a24 24 0 0 1 48 0H292" fill="none" stroke="#000" stroke-width="10"/>
+  <!-- Wi-Fi symbol -->
+  <path d="M212 76a26 26 0 0 1 36 0M220 86a14 14 0 0 1 20 0" fill="none" stroke="#000" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="230" cy="96" r="4" fill="#000"/>
+  <!-- lock state LEDs -->
+  <rect x="194" y="122" width="12" height="9" rx="2" fill="#000"/>
+  <rect x="254" y="122" width="12" height="9" rx="2" fill="#000"/>
+  <!-- keypad 3 x 4 -->
+  <g fill="#000">
+    <circle cx="200" cy="168" r="11"/><circle cx="230" cy="168" r="11"/><circle cx="260" cy="168" r="11"/>
+    <circle cx="200" cy="206" r="11"/><circle cx="230" cy="206" r="11"/><circle cx="260" cy="206" r="11"/>
+    <circle cx="200" cy="244" r="11"/><circle cx="230" cy="244" r="11"/><circle cx="260" cy="244" r="11"/>
+    <circle cx="200" cy="282" r="11"/><circle cx="230" cy="282" r="11"/><circle cx="260" cy="282" r="11"/>
+  </g>
+  <!-- doorbell button -->
+  <circle cx="230" cy="338" r="13" fill="#000"/>
+  <!-- lever handle -->
+  <circle cx="230" cy="408" r="30" fill="#000"/>
+  <rect x="230" y="389" width="262" height="38" rx="19" fill="#000"/>
+  <!-- Yale logo -->
+  <circle cx="230" cy="466" r="14" fill="none" stroke="#000" stroke-width="6"/>
 </svg>

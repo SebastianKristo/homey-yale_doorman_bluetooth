@@ -58,5 +58,9 @@
   "1.2.0": {
     "en": "Support for ESPHome Bluetooth proxies (e.g. Everything Presence One), so Homey no longer needs to be near the lock.",
     "no": "Støtte for ESPHome Bluetooth-proxy (f.eks. Everything Presence One), så Homey ikke trenger å stå nær låsen."
+  },
+  "1.2.1": {
+    "en": "New icons and images modelled on the Yale Doorman L3.",
+    "no": "Nye ikoner og bilder laget etter Yale Doorman L3."
   }
 }

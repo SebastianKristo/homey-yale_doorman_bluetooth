@@ -1,5 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <path d="M168 220v-56a88 88 0 0 1 176 0v56" fill="none" stroke="#000" stroke-width="36"/>
-  <rect x="112" y="214" width="288" height="240" rx="40" fill="none" stroke="#000" stroke-width="32"/>
-  <path d="M216 290l80 70-40 36V256l40 36-80 70" fill="none" stroke="#000" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Doorman L3 silhouette -->
+  <rect x="96" y="14" width="140" height="484" rx="70" fill="none" stroke="#000" stroke-width="16"/>
+  <path d="M104 336H142a24 24 0 0 1 48 0H228" fill="none" stroke="#000" stroke-width="10"/>
+  <g fill="#000">
+    <circle cx="136" cy="168" r="11"/><circle cx="166" cy="168" r="11"/><circle cx="196" cy="168" r="11"/>
+    <circle cx="136" cy="206" r="11"/><circle cx="166" cy="206" r="11"/><circle cx="196" cy="206" r="11"/>
+    <circle cx="136" cy="244" r="11"/><circle cx="166" cy="244" r="11"/><circle cx="196" cy="244" r="11"/>
+    <circle cx="136" cy="282" r="11"/><circle cx="166" cy="282" r="11"/><circle cx="196" cy="282" r="11"/>
+  </g>
+  <circle cx="166" cy="408" r="30" fill="#000"/>
+  <rect x="166" y="389" width="150" height="38" rx="19" fill="#000"/>
+  <!-- Bluetooth badge -->
+  <circle cx="388" cy="168" r="96" fill="none" stroke="#000" stroke-width="16"/>
+  <path d="M352 132l72 64-36 32V108l36 32-72 64" fill="none" stroke="#000" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
