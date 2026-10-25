@@ -33,5 +33,9 @@
   },
   "1.1.5": {
     "en": "new fix"
+  },
+  "1.1.6": {
+    "en": "Only discover the Yale Bluetooth service (fixes ATT error 0x0e on HomeKit-enabled locks).",
+    "no": "Henter bare Yale-tjenesten over Bluetooth (retter ATT error 0x0e på låser med HomeKit)."
   }
 }
