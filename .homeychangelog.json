@@ -80,5 +80,8 @@
   "1.4.0": {
     "en": "Flow trigger \"Local control failed\" and condition \"Lock is reachable locally\", e.g. to fall back to the Yale Home app and Wi-Fi bridge.",
     "no": "Flow-trigger «Lokal styring feilet» og betingelse «Låsen er tilgjengelig lokalt», f.eks. for å gå via Yale Home-appen og Wi-Fi-broen."
+  },
+  "1.4.1": {
+    "en": "flow for error"
   }
 }
