@@ -110,5 +110,8 @@
   "2.2.2": {
     "en": "Copy buttons now work in the Homey app, and URLs/commands can be selected.",
     "no": "Kopier-knappene virker nå i Homey-appen, og adresser/kommandoer kan markeres."
+  },
+  "2.2.3": {
+    "en": "new fix"
   }
 }
