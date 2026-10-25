@@ -40,5 +40,9 @@
   },
   "1.1.7": {
     "en": "new fix"
+  },
+  "1.1.8": {
+    "en": "Fix authentication with the lock (ATT error 0x0e during init).",
+    "no": "Retter autentisering mot låsen (ATT error 0x0e under init)."
   }
 }
