@@ -2,9 +2,13 @@
 
 const Homey = require('homey');
 const { YaleLock } = require('../../lib/YaleBle');
+const { normaliseType } = require('../../lib/unifi');
 
 const PROXY_SCAN_MS = 5000;
 const VERIFY_DELAY_MS = 6000;
+// An unlock seen within this time after a command is attributed to that command
+const ATTRIBUTION_WINDOW_MS = 60 * 1000;
+const METHODS = ['face', 'fingerprint', 'nfc', 'pin', 'homey', 'other'];
 const RECONNECT_MIN_MS = 5000;
 const RECONNECT_MAX_MS = 5 * 60 * 1000;
 
@@ -15,11 +19,13 @@ class YaleLockDevice extends Homey.Device {
   async onInit() {
     this.lastManufacturerData = null;
     // Devices paired before battery support was added
-    for (const cap of ['measure_battery', 'alarm_battery']) {
+    for (const cap of ['measure_battery', 'alarm_battery', 'unlocked_by', 'unlock_method']) {
       if (!this.hasCapability(cap)) await this.addCapability(cap).catch(this.error);
     }
     this.registerCapabilityListener('locked', async (value) => {
       const action = value ? 'lock' : 'unlock';
+      // Unlocks from the Homey app/Flows without a person are attributed to Homey
+      if (!value && !this.pendingAttribution) this.attributeNext('Homey', 'homey');
       try {
         await this.withLock(async (lock) => {
           if (value) await lock.lock();
@@ -30,8 +36,10 @@ class YaleLockDevice extends Homey.Device {
         await this.homey.flow.getDeviceTriggerCard('local_failed')
           .trigger(this, { action, error: err.message })
           .catch(this.error);
+        this.pendingAttribution = null;
         throw err;
       }
+      if (!value) await this.recordUnlock();
       // Return as soon as the lock has accepted the command. The lock pushes the
       // result when the motor stops; read the state afterwards as a fallback.
       this.homey.clearTimeout(this.verifyTimer);
@@ -179,11 +187,46 @@ class YaleLockDevice extends Homey.Device {
     await this.setCapabilityValue('alarm_battery', percentage <= this.getSetting('battery_alarm'));
   }
 
+  // Remember who the next unlock is for; recorded once the lock reports it unlocked
+  attributeNext(person, method) {
+    this.pendingAttribution = {
+      person: String(person || '').trim() || this.homey.__('device.unknown_person'),
+      method: METHODS.includes(normaliseType(method)) ? normaliseType(method) : 'other',
+      at: Date.now(),
+    };
+  }
+
+  async unlockFor(person, method) {
+    this.attributeNext(person, method);
+    await this.triggerCapabilityListener('locked', false);
+  }
+
+  async recordUnlock() {
+    const pending = this.pendingAttribution;
+    this.pendingAttribution = null;
+    const fresh = pending && Date.now() - pending.at < ATTRIBUTION_WINDOW_MS;
+    // Unlocked at the lock itself (key, thumb turn, keypad) or by something we didn't see
+    const { person, method } = fresh ? pending : { person: this.homey.__('device.unknown_person'), method: 'other' };
+    // The lock's own "unlocked" report right after our command is the same unlock
+    if (this.lastRecorded && Date.now() - this.lastRecorded < 15000 && !fresh) return;
+    this.lastRecorded = Date.now();
+    this.log(`Unlocked by ${person} (${method})`);
+    await this.setCapabilityValue('unlocked_by', person).catch(this.error);
+    await this.setCapabilityValue('unlock_method', method).catch(this.error);
+    await this.homey.flow.getDeviceTriggerCard('unlocked_by_person')
+      .trigger(this, { person, method: this.homey.__(`device.method.${method}`) })
+      .catch(this.error);
+  }
+
   async applyStatus(status) {
     this.log('Status:', status);
+    const wasLocked = this.getCapabilityValue('locked');
     await this.setCapabilityValue('lock_state', status).catch(this.error);
     if (status === 'locked') await this.setCapabilityValue('locked', true);
-    else if (status === 'unlocked') await this.setCapabilityValue('locked', false);
+    else if (status === 'unlocked') {
+      await this.setCapabilityValue('locked', false);
+      if (wasLocked !== false) await this.recordUnlock();
+    }
   }
 
   async withLock(fn) {

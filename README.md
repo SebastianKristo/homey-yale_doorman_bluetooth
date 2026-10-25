@@ -82,7 +82,15 @@ Appen tar imot webhooks fra **UniFi Protect Alarm Manager** (ansiktsgjenkjenning
 
 1. Homey-appen → Apper → Yale lokal Bluetooth → **Innstillinger**: kopier webhook-adressen.
 2. UniFi Protect → Alarm Manager → Create Alarm → trigger (f.eks. Face → Known) → Action **Webhook**, POST, lim inn adressen.
-3. Lag en Flow: *Når* UniFi-hendelse mottatt, *og* Person er f.eks. «Sebastian» *og* Resultat er `ACCESS`, *så* lås opp.
+3. Lag en Flow: *Når* UniFi-hendelse mottatt, *og* Person er f.eks. «Sebastian» *og* Resultat er `ACCESS`,
+   *så* «Lås opp for person» med tokenene *Person* og *Type*.
+
+Låsen viser **Låst opp av** og **Opplåsingsmetode** (ansikt, fingeravtrykk, NFC, PIN, Homey, eller ukjent når
+den låses opp på selve låsen), og triggeren «Låst opp av person» kjører ved hver opplåsing.
+
+**Adresse per person og metode:** Lag én alarm i UniFi per person/metode og legg til
+`&person=Sebastian&method=fingerprint` på adressen (innstillingssiden lager den for deg). Det som står i
+adressen går foran det UniFi sender.
 
 Adressen inneholder en hemmelig nøkkel og virker som en nøkkel til døren for alle på nettverket som kjenner
 den. Lag ny nøkkel i innstillingene hvis den kommer på avveie. Appen låser aldri opp av seg selv – det er

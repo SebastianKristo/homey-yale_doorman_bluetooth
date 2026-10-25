@@ -32,7 +32,16 @@
     }
   },
   "device": {
-    "missing_key": "Offline key/slot missing or invalid. Check the device settings."
+    "missing_key": "Offline key/slot missing or invalid. Check the device settings.",
+    "unknown_person": "Unknown",
+    "method": {
+      "face": "Face",
+      "fingerprint": "Fingerprint",
+      "nfc": "NFC / card",
+      "pin": "PIN code",
+      "homey": "Homey",
+      "other": "Other / unknown"
+    }
   },
   "settings": {
     "title": "UniFi webhook",
@@ -47,8 +56,13 @@
     "setup_title": "Setup in UniFi",
     "step1": "UniFi Protect: Alarm Manager → Create Alarm. Choose a trigger, e.g. \"Face → Known\" for specific people, or fingerprint/NFC from the UniFi Access reader, and select the camera/reader at the door.",
     "step2": "Under Action: choose \"Webhook\", method POST, and paste the URL above.",
-    "step3": "In Homey: create a Flow with \"UniFi event received\". Check that Person is who you expect and Result is ACCESS, then use \"Unlock\" on the lock.",
+    "step3": "In Homey: create a Flow with \"UniFi event received\". Check that Person is who you expect and Result is ACCESS, then use \"Unlock for person\" with the Person and Type tokens.",
     "step4": "Test: trigger the alarm in UniFi and check that \"Last event\" above updates.",
-    "warning": "This URL works like a key to the door for anyone who can reach Homey on the network. Don't share it. Create a new key if it has leaked. Never unlock without checking Person in the Flow."
+    "warning": "This URL works like a key to the door for anyone who can reach Homey on the network. Don't share it. Create a new key if it has leaked. Never unlock without checking Person in the Flow.",
+    "builder_title": "URL per person and method",
+    "builder_text": "Create one alarm in UniFi per person and method, each with its own URL. Then Homey always knows who and how, even if UniFi doesn't send the name.",
+    "person": "Person",
+    "method": "Method",
+    "method_auto": "From UniFi (automatic)"
   }
 }

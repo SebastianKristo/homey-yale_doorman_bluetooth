@@ -1,6 +1,6 @@
 {
   "id": "no.kristo.yaleble",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -92,6 +92,72 @@
           }
         }
       ]
+    },
+    "unlocked_by": {
+      "type": "string",
+      "title": {
+        "en": "Unlocked by",
+        "no": "Låst opp av"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/lock_state.svg"
+    },
+    "unlock_method": {
+      "type": "enum",
+      "title": {
+        "en": "Unlock method",
+        "no": "Opplåsingsmetode"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/lock_state.svg",
+      "values": [
+        {
+          "id": "face",
+          "title": {
+            "en": "Face",
+            "no": "Ansikt"
+          }
+        },
+        {
+          "id": "fingerprint",
+          "title": {
+            "en": "Fingerprint",
+            "no": "Fingeravtrykk"
+          }
+        },
+        {
+          "id": "nfc",
+          "title": {
+            "en": "NFC / card",
+            "no": "NFC / kort"
+          }
+        },
+        {
+          "id": "pin",
+          "title": {
+            "en": "PIN code",
+            "no": "PIN-kode"
+          }
+        },
+        {
+          "id": "homey",
+          "title": {
+            "en": "Homey",
+            "no": "Homey"
+          }
+        },
+        {
+          "id": "other",
+          "title": {
+            "en": "Other / unknown",
+            "no": "Annet / ukjent"
+          }
+        }
+      ]
     }
   },
   "flow": {
@@ -107,6 +173,52 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=lock"
+          }
+        ]
+      },
+      {
+        "id": "unlock_for",
+        "title": {
+          "en": "Unlock for person",
+          "no": "Lås opp for person"
+        },
+        "titleFormatted": {
+          "en": "Unlock for [[person]] with [[method]]",
+          "no": "Lås opp for [[person]] med [[method]]"
+        },
+        "hint": {
+          "en": "Unlocks and records who and how. Use the Person and Type tokens from \"UniFi event received\", or type e.g. face/fingerprint.",
+          "no": "Låser opp og registrerer hvem og hvordan. Bruk tokenene Person og Type fra «UniFi-hendelse mottatt», eller skriv f.eks. ansikt/fingeravtrykk."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=lock"
+          },
+          {
+            "type": "text",
+            "name": "person",
+            "title": {
+              "en": "Person",
+              "no": "Person"
+            },
+            "placeholder": {
+              "en": "Sebastian",
+              "no": "Sebastian"
+            }
+          },
+          {
+            "type": "text",
+            "name": "method",
+            "title": {
+              "en": "Method",
+              "no": "Metode"
+            },
+            "placeholder": {
+              "en": "face, fingerprint, nfc, pin …",
+              "no": "ansikt, fingeravtrykk, nfc, pin …"
+            }
           }
         ]
       }
@@ -240,6 +352,50 @@
             }
           }
         ]
+      },
+      {
+        "id": "unlocked_by_person",
+        "title": {
+          "en": "Unlocked by person",
+          "no": "Låst opp av person"
+        },
+        "hint": {
+          "en": "Every unlock, with who and how (Homey, face, fingerprint … or unknown when unlocked at the lock).",
+          "no": "Hver opplåsing, med hvem og hvordan (Homey, ansikt, fingeravtrykk … eller ukjent når det er låst opp på låsen)."
+        },
+        "tokens": [
+          {
+            "name": "person",
+            "type": "string",
+            "title": {
+              "en": "Person",
+              "no": "Person"
+            },
+            "example": {
+              "en": "Sebastian",
+              "no": "Sebastian"
+            }
+          },
+          {
+            "name": "method",
+            "type": "string",
+            "title": {
+              "en": "Method",
+              "no": "Metode"
+            },
+            "example": {
+              "en": "Face",
+              "no": "Ansikt"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=lock"
+          }
+        ]
       }
     ],
     "conditions": [
@@ -275,7 +431,9 @@
         "locked",
         "lock_state",
         "measure_battery",
-        "alarm_battery"
+        "alarm_battery",
+        "unlocked_by",
+        "unlock_method"
       ],
       "platforms": [
         "local"

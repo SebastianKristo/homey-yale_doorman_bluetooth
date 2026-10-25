@@ -28,6 +28,27 @@
   </fieldset>
 
   <fieldset class="homey-form-fieldset">
+    <legend class="homey-form-legend" data-t="settings.builder_title"></legend>
+    <p data-t="settings.builder_text"></p>
+    <div class="homey-form-group">
+      <label class="homey-form-label" for="person" data-t="settings.person"></label>
+      <input class="homey-form-input" id="person" type="text" placeholder="Sebastian" />
+    </div>
+    <div class="homey-form-group">
+      <label class="homey-form-label" for="method" data-t="settings.method"></label>
+      <select class="homey-form-select" id="method">
+        <option value="" data-t="settings.method_auto"></option>
+        <option value="face" data-t="device.method.face"></option>
+        <option value="fingerprint" data-t="device.method.fingerprint"></option>
+        <option value="nfc" data-t="device.method.nfc"></option>
+        <option value="pin" data-t="device.method.pin"></option>
+      </select>
+    </div>
+    <code class="url" id="customUrl">…</code>
+    <div class="row"><button class="homey-button-primary" id="copyCustom" data-t="settings.copy"></button></div>
+  </fieldset>
+
+  <fieldset class="homey-form-fieldset">
     <legend class="homey-form-legend" data-t="settings.setup_title"></legend>
     <ol>
       <li data-t="settings.step1"></li>
@@ -44,7 +65,21 @@
       el.textContent = Homey.__(el.getAttribute('data-t'));
     });
 
+    var baseUrl = '';
+    function buildCustom() {
+      var person = document.getElementById('person').value.trim();
+      var method = document.getElementById('method').value;
+      var url = baseUrl;
+      if (person) url += '&person=' + encodeURIComponent(person);
+      if (method) url += '&method=' + method;
+      document.getElementById('customUrl').textContent = url;
+    }
+    document.getElementById('person').addEventListener('input', buildCustom);
+    document.getElementById('method').addEventListener('change', buildCustom);
+
     function render(info) {
+      baseUrl = info.url;
+      buildCustom();
       document.getElementById('url').textContent = info.url;
       var e = info.lastEvent;
       document.getElementById('last').textContent = e
@@ -59,17 +94,19 @@
       });
     }
 
-    document.getElementById('copy').addEventListener('click', function () {
-      var text = document.getElementById('url').textContent;
+    function copyFrom(id) {
+      var text = document.getElementById(id).textContent;
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text).then(function () { Homey.alert(Homey.__('settings.copied')); });
       } else {
         var range = document.createRange();
-        range.selectNodeContents(document.getElementById('url'));
+        range.selectNodeContents(document.getElementById(id));
         window.getSelection().removeAllRanges();
         window.getSelection().addRange(range);
       }
-    });
+    }
+    document.getElementById('copy').addEventListener('click', function () { copyFrom('url'); });
+    document.getElementById('copyCustom').addEventListener('click', function () { copyFrom('customUrl'); });
 
     document.getElementById('regen').addEventListener('click', function () {
       Homey.confirm(Homey.__('settings.regenerate_confirm'), 'warning', function (err, ok) {

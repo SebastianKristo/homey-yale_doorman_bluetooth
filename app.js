@@ -26,6 +26,7 @@ class YaleBleApp extends Homey.App {
 
   async getWebhookInfo() {
     const token = this.homey.settings.get('webhook_token');
+    // Base URL; the settings page appends &person=…&method=… per alarm
     const address = await this.homey.cloud.getLocalAddress().catch(() => null);
     const host = address ? address.replace(/:80$/, '') : '<homey-ip>';
     return {
@@ -49,7 +50,7 @@ class YaleBleApp extends Homey.App {
       throw err;
     }
     // GET requests (and quick tests) can carry the fields as query parameters
-    const event = parseUnifiEvent(Object.keys(body || {}).length ? body : query);
+    const event = parseUnifiEvent(body || {}, query);
     this.log(`UniFi event: alarm="${event.alarm}" person="${event.person}" type=${event.type} (${event.rawType})`);
     this.homey.settings.set('webhook_last_event', { ...event, at: new Date().toISOString() });
     await this.unifiTrigger.trigger(event);

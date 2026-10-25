@@ -32,7 +32,16 @@
     }
   },
   "device": {
-    "missing_key": "Offline-nøkkel/slot mangler eller er ugyldig. Sjekk enhetsinnstillingene."
+    "missing_key": "Offline-nøkkel/slot mangler eller er ugyldig. Sjekk enhetsinnstillingene.",
+    "unknown_person": "Ukjent",
+    "method": {
+      "face": "Ansikt",
+      "fingerprint": "Fingeravtrykk",
+      "nfc": "NFC / kort",
+      "pin": "PIN-kode",
+      "homey": "Homey",
+      "other": "Annet / ukjent"
+    }
   },
   "settings": {
     "title": "UniFi-webhook",
@@ -47,8 +56,13 @@
     "setup_title": "Oppsett i UniFi",
     "step1": "UniFi Protect: Alarm Manager → Create Alarm. Velg trigger, f.eks. «Face → Known» for bestemte personer, eller fingeravtrykk/NFC fra UniFi Access-leseren, og velg kamera/leser ved døren.",
     "step2": "Under Action: velg «Webhook», metode POST, og lim inn adressen over.",
-    "step3": "I Homey: lag en Flow med «UniFi-hendelse mottatt». Sjekk at Person er den du forventer og at Resultat er ACCESS, og bruk deretter «Lås opp» på låsen.",
+    "step3": "I Homey: lag en Flow med «UniFi-hendelse mottatt». Sjekk at Person er den du forventer og at Resultat er ACCESS, og bruk deretter «Lås opp for person» med tokenene Person og Type.",
     "step4": "Test: utløs alarmen i UniFi, og se at «Siste hendelse» over oppdateres.",
-    "warning": "Adressen virker som en nøkkel til døren for alle som kan nå Homey på nettverket. Del den ikke. Lag ny nøkkel hvis den har kommet på avveie. Lås aldri opp uten å sjekke Person i Flowen."
+    "warning": "Adressen virker som en nøkkel til døren for alle som kan nå Homey på nettverket. Del den ikke. Lag ny nøkkel hvis den har kommet på avveie. Lås aldri opp uten å sjekke Person i Flowen.",
+    "builder_title": "Adresse per person og metode",
+    "builder_text": "Lag én alarm i UniFi per person og metode, og gi hver sin adresse. Da vet Homey alltid hvem og hvordan, selv om UniFi ikke sender navnet.",
+    "person": "Person",
+    "method": "Metode",
+    "method_auto": "Fra UniFi (automatisk)"
   }
 }
