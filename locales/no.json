@@ -3,7 +3,33 @@
     "invalid_key": "Offline-nøkkelen må være nøyaktig 32 heksadesimale tegn.",
     "invalid_slot": "Slot må være et tall mellom 0 og 255.",
     "unknown_device": "Ukjent enhet",
-    "invalid_proxy_key": "Krypteringsnøkkelen for proxyen må være base64-nøkkelen fra ESPHome (44 tegn)."
+    "invalid_proxy_key": "Krypteringsnøkkelen for proxyen må være base64-nøkkelen fra ESPHome (44 tegn).",
+    "intro": "Låsen styres lokalt over Bluetooth. Til det trengs låsens offline-nøkkel og slot fra Yale Home-kontoen din.",
+    "key_label": "Offline-nøkkel (32 tegn)",
+    "slot_label": "Slot",
+    "next": "Neste",
+    "copy": "Kopier",
+    "copied": "Kopiert",
+    "help": {
+      "title": "Hvor finner jeg nøkkelen?",
+      "ha_title": "Har du låsen i Home Assistant (Yale Access Bluetooth)",
+      "ha_step1": "I Home Assistant: Innstillinger → Tillegg → Tilleggsbutikk → installer og start «Terminal & SSH», og åpne nettgrensesnittet.",
+      "ha_step2": "Kjør denne kommandoen:",
+      "ha_result": "Den viser key (offline-nøkkelen), slot og låsens Bluetooth-adresse. Kjører Home Assistant i Docker, bytt /config med mappen du har koblet til /config.",
+      "cloud_title": "Har du bare Yale-integrasjonen (sky)",
+      "cloud_text": "Home Assistant finner vanligvis låsen over Bluetooth og foreslår «Yale Access Bluetooth» med nøkkelen ferdig utfylt. Legg den til under Innstillinger → Enheter og tjenester, og kjør kommandoen over.",
+      "noha_title": "Har du ikke Home Assistant",
+      "noha_text": "Yale Home tillater bare innlogging via godkjente apper. Kjør Home Assistant midlertidig i Docker på en PC/Mac, legg til Yale-integrasjonen og hent nøkkelen med skriptet tools/get-offline-key.js. Fullstendig oppskrift på GitHub:",
+      "after_title": "Etterpå",
+      "after_text": "Deaktiver «Yale Access Bluetooth» i Home Assistant. Låsen kan bare ha én Bluetooth-tilkobling om gangen, så ellers konkurrerer de om den. Kontoen må være eier eller admin av låsen."
+    },
+    "proxy": {
+      "title": "Lang avstand? ESPHome Bluetooth-proxy (valgfritt)",
+      "text": "Står Homey for langt fra døren, kan låsen styres via en ESPHome-enhet med Bluetooth-proxy nær døren, f.eks. Everything Presence One. La feltene stå tomme for å bruke Homeys egen Bluetooth.",
+      "host_label": "Proxy IP-adresse",
+      "key_label": "Proxy krypteringsnøkkel (valgfritt)",
+      "find": "IP og nøkkel finnes i Home Assistant. Kjør i samme terminal (key er tom hvis enheten ikke bruker kryptering):"
+    }
   },
   "device": {
     "missing_key": "Offline-nøkkel/slot mangler eller er ugyldig. Sjekk enhetsinnstillingene."

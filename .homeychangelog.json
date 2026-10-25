@@ -80,5 +80,9 @@
   "1.4.0": {
     "en": "Flow trigger \"Local control failed\" and condition \"Lock is reachable locally\", e.g. to fall back to the Yale Home app and Wi-Fi bridge.",
     "no": "Flow-trigger «Lokal styring feilet» og betingelse «Låsen er tilgjengelig lokalt», f.eks. for å gå via Yale Home-appen og Wi-Fi-broen."
+  },
+  "1.4.1": {
+    "en": "Step-by-step help in pairing, with commands to find the offline key and proxy key in Home Assistant.",
+    "no": "Steg-for-steg-hjelp i parringen, med kommandoer for å finne offline-nøkkel og proxy-nøkkel i Home Assistant."
   }
 }

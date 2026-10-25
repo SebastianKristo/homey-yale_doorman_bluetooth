@@ -8,8 +8,33 @@ direkte over Bluetooth fra Homey Pro. Ingen sky, ingen bro.
 - Låsens **offline-nøkkel** (32 hex-tegn) og **slot**.
 
 ## Hente offline-nøkkel og slot
-Nøkkelen ligger ikke i låsen, men i Yale Home-kontoen din. Yale Home tillater bare innlogging via
-Home Assistant (OAuth), så vi låner Home Assistant midlertidig for å hente den. Det tar ca. 10 minutter.
+Nøkkelen ligger ikke i låsen, men i Yale Home-kontoen din. Hjelpen vises også i Homey når du legger til låsen.
+
+### Har du låsen i Home Assistant (Yale Access Bluetooth)
+1. Innstillinger → Tillegg → Tilleggsbutikk → installer og start **Terminal & SSH**, åpne nettgrensesnittet.
+2. Kjør:
+   ```bash
+   jq '.data.entries[] | select(.domain=="yalexs_ble") | {title, key: .data.key, slot: .data.slot, address: .data.address}' /config/.storage/core.config_entries
+   ```
+   `key` er offline-nøkkelen.
+3. Deaktiver «Yale Access Bluetooth» i Home Assistant etterpå, ellers konkurrerer de om låsen.
+
+Har du bare skyintegrasjonen «Yale», foreslår Home Assistant vanligvis «Yale Access Bluetooth» med nøkkelen
+ferdig utfylt. Legg den til og kjør kommandoen over. Alternativt, med skyintegrasjonens token:
+```bash
+# i Home Assistant
+jq -r '.data.entries[] | select(.domain=="yale") | .data.token.access_token' /config/.storage/core.config_entries
+# på PC/Mac, i denne mappen
+node tools/get-offline-key.js --token 'TOKEN'
+```
+
+### ESPHome-proxy: IP og krypteringsnøkkel
+```bash
+jq '.data.entries[] | select(.domain=="esphome") | {title, host: .data.host, key: .data.noise_psk}' /config/.storage/core.config_entries
+```
+
+### Har du ikke Home Assistant
+Yale Home tillater bare innlogging via godkjente apper, så vi låner Home Assistant midlertidig:
 
 1. Start Home Assistant i Docker på Macen (Docker Desktop må være installert):
    ```bash

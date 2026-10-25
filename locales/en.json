@@ -3,7 +3,33 @@
     "invalid_key": "The offline key must be exactly 32 hexadecimal characters.",
     "invalid_slot": "The slot must be a number between 0 and 255.",
     "unknown_device": "Unknown device",
-    "invalid_proxy_key": "The proxy encryption key must be the base64 key from ESPHome (44 characters)."
+    "invalid_proxy_key": "The proxy encryption key must be the base64 key from ESPHome (44 characters).",
+    "intro": "The lock is controlled locally over Bluetooth. This needs the lock's offline key and slot from your Yale Home account.",
+    "key_label": "Offline key (32 characters)",
+    "slot_label": "Slot",
+    "next": "Next",
+    "copy": "Copy",
+    "copied": "Copied",
+    "help": {
+      "title": "Where do I find the key?",
+      "ha_title": "If the lock is in Home Assistant (Yale Access Bluetooth)",
+      "ha_step1": "In Home Assistant: Settings → Add-ons → Add-on store → install and start \"Terminal & SSH\", and open the web UI.",
+      "ha_step2": "Run this command:",
+      "ha_result": "It shows key (the offline key), slot and the lock's Bluetooth address. If Home Assistant runs in Docker, replace /config with the folder mounted as /config.",
+      "cloud_title": "If you only have the Yale (cloud) integration",
+      "cloud_text": "Home Assistant usually discovers the lock over Bluetooth and offers \"Yale Access Bluetooth\" with the key filled in. Add it under Settings → Devices & services, then run the command above.",
+      "noha_title": "If you don't have Home Assistant",
+      "noha_text": "Yale Home only allows login through approved apps. Run Home Assistant temporarily in Docker on a PC/Mac, add the Yale integration and get the key with the tools/get-offline-key.js script. Full guide on GitHub:",
+      "after_title": "Afterwards",
+      "after_text": "Disable \"Yale Access Bluetooth\" in Home Assistant. The lock accepts only one Bluetooth connection at a time, otherwise they compete for it. The account must be owner or admin of the lock."
+    },
+    "proxy": {
+      "title": "Long distance? ESPHome Bluetooth proxy (optional)",
+      "text": "If Homey is too far from the door, the lock can be controlled through an ESPHome device with Bluetooth proxy near the door, e.g. Everything Presence One. Leave empty to use Homey's own Bluetooth.",
+      "host_label": "Proxy IP address",
+      "key_label": "Proxy encryption key (optional)",
+      "find": "The IP and key are stored in Home Assistant. Run in the same terminal (key is empty if the device doesn't use encryption):"
+    }
   },
   "device": {
     "missing_key": "Offline key/slot missing or invalid. Check the device settings."

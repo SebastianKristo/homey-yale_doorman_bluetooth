@@ -1,6 +1,6 @@
 {
   "id": "no.kristo.yaleble",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -237,7 +237,11 @@
                 "en": "Offline key (32 hex chars)",
                 "no": "Offline-nøkkel (32 hex-tegn)"
               },
-              "value": ""
+              "value": "",
+              "hint": {
+                "en": "From Home Assistant (Terminal & SSH add-on): jq '.data.entries[] | select(.domain==\"yalexs_ble\") | {key: .data.key, slot: .data.slot}' /config/.storage/core.config_entries",
+                "no": "Fra Home Assistant (tillegget Terminal & SSH): jq '.data.entries[] | select(.domain==\"yalexs_ble\") | {key: .data.key, slot: .data.slot}' /config/.storage/core.config_entries"
+              }
             },
             {
               "id": "offline_slot",
@@ -281,8 +285,8 @@
                 "no": "Proxy krypteringsnøkkel"
               },
               "hint": {
-                "en": "The api encryption key from the ESPHome configuration. Leave empty if the device has none.",
-                "no": "api-krypteringsnøkkelen fra ESPHome-konfigurasjonen. La stå tomt hvis enheten ikke har en."
+                "en": "The api encryption key from ESPHome. In Home Assistant: jq '.data.entries[] | select(.domain==\"esphome\") | {title, host: .data.host, key: .data.noise_psk}' /config/.storage/core.config_entries",
+                "no": "api-krypteringsnøkkelen fra ESPHome. I Home Assistant: jq '.data.entries[] | select(.domain==\"esphome\") | {title, host: .data.host, key: .data.noise_psk}' /config/.storage/core.config_entries"
               }
             }
           ]
