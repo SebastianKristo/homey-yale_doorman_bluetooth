@@ -51,5 +51,9 @@
   "1.1.10": {
     "en": "More robust handshake: ignore invalid Bluetooth frames and resend like Home Assistant.",
     "no": "Mer robust håndtrykk: ignorerer ugyldige Bluetooth-meldinger og sender på nytt som Home Assistant."
+  },
+  "2.5.0": {
+    "en": "Test build: code from 1.1.10 to isolate a connection problem.",
+    "no": "Testversjon: koden fra 1.1.10 for å finne en tilkoblingsfeil."
   }
 }
