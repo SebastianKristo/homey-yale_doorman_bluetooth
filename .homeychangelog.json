@@ -117,5 +117,8 @@
   "2.3.0": {
     "en": "Unlock rules in the app settings: one webhook URL per person and method that unlocks directly, no Flow needed.",
     "no": "Opplåsingsregler i appens innstillinger: én webhook-adresse per person og metode som låser opp direkte, uten Flow."
+  },
+  "2.3.1": {
+    "en": "new fix"
   }
 }
