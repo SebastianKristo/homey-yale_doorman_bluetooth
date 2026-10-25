@@ -25,6 +25,8 @@ class YaleLockDriver extends Homey.Driver {
   async onInit() {
     this.homey.flow.getActionCard('refresh_status')
       .registerRunListener(({ device }) => device.refreshStatus());
+    this.homey.flow.getConditionCard('is_reachable')
+      .registerRunListener(({ device }) => device.reachable === true);
   }
 
   async onPair(session) {

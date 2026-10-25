@@ -19,10 +19,19 @@ class YaleLockDevice extends Homey.Device {
       if (!this.hasCapability(cap)) await this.addCapability(cap).catch(this.error);
     }
     this.registerCapabilityListener('locked', async (value) => {
-      await this.withLock(async (lock) => {
-        if (value) await lock.lock();
-        else await lock.unlock();
-      });
+      const action = value ? 'lock' : 'unlock';
+      try {
+        await this.withLock(async (lock) => {
+          if (value) await lock.lock();
+          else await lock.unlock();
+        });
+      } catch (err) {
+        // Let a Flow take over, e.g. via the Yale Home (cloud) app and Wi-Fi bridge
+        await this.homey.flow.getDeviceTriggerCard('local_failed')
+          .trigger(this, { action, error: err.message })
+          .catch(this.error);
+        throw err;
+      }
       // Return as soon as the lock has accepted the command. The lock pushes the
       // result when the motor stops; read the state afterwards as a fallback.
       this.homey.clearTimeout(this.verifyTimer);
@@ -184,9 +193,11 @@ class YaleLockDevice extends Homey.Device {
         await this.lock.disconnect().catch(() => {});
         result = await fn(this.lock);
       }
+      this.reachable = true;
       this.setAvailable().catch(this.error);
       return result;
     } catch (err) {
+      this.reachable = false;
       this.error(err);
       throw err;
     } finally {

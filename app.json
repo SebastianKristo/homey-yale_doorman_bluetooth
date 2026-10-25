@@ -1,6 +1,6 @@
 {
   "id": "no.kristo.yaleble",
-  "version": "1.3.3",
+  "version": "1.4.0",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -101,6 +101,72 @@
         "title": {
           "en": "Refresh lock status",
           "no": "Oppdater låsstatus"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=lock"
+          }
+        ]
+      }
+    ],
+    "triggers": [
+      {
+        "id": "local_failed",
+        "title": {
+          "en": "Local control failed",
+          "no": "Lokal styring feilet"
+        },
+        "hint": {
+          "en": "Lock/unlock over Bluetooth didn't reach the lock. Use it to fall back to e.g. the Yale Home (cloud) app.",
+          "no": "Lås/lås opp over Bluetooth nådde ikke frem. Bruk den til å gå via f.eks. Yale Home-appen (sky)."
+        },
+        "tokens": [
+          {
+            "name": "action",
+            "type": "string",
+            "title": {
+              "en": "Action",
+              "no": "Handling"
+            },
+            "example": {
+              "en": "lock",
+              "no": "lock"
+            }
+          },
+          {
+            "name": "error",
+            "type": "string",
+            "title": {
+              "en": "Error",
+              "no": "Feil"
+            },
+            "example": {
+              "en": "Timeout",
+              "no": "Timeout"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=lock"
+          }
+        ]
+      }
+    ],
+    "conditions": [
+      {
+        "id": "is_reachable",
+        "title": {
+          "en": "Lock !{{is|isn't}} reachable locally",
+          "no": "Låsen !{{er|er ikke}} tilgjengelig lokalt"
+        },
+        "hint": {
+          "en": "Whether the last Bluetooth contact with the lock succeeded.",
+          "no": "Om siste Bluetooth-kontakt med låsen lyktes."
         },
         "args": [
           {
