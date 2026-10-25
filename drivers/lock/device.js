@@ -145,8 +145,9 @@ class YaleLockDevice extends Homey.Device {
   async checkAdvertisement() {
     // Nothing to compare against while busy or without a usable key
     if (this.busy || !this.lock) return;
-    // While connected the lock pushes its state itself
-    if (this.lock.connected) return;
+    // While connected the lock pushes its state itself, and a scan while a
+    // connection is being set up can make Homey's radio drop that connection
+    if (this.lock.connected || this.lock.connecting) return;
     const md = this.proxyConfig ? await this.proxyManufacturerData() : await this.homeyManufacturerData();
     if (md && this.lastManufacturerData && md !== this.lastManufacturerData) {
       this.log('Advertisement changed, reading status');
