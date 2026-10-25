@@ -4,7 +4,7 @@
   <script type="text/javascript" src="/homey.js" data-origin="settings"></script>
   <style>
     body { padding: 0 4px 24px; }
-    .url { display: block; padding: 12px; border-radius: 8px; background: #1e2430; color: #e8eaed;
+    .url { display: block; resize: none; width: 100%; box-sizing: border-box; border: 0; outline: none; -webkit-user-select: text; user-select: text; padding: 12px; border-radius: 8px; background: #1e2430; color: #e8eaed;
       font: 12px/1.45 ui-monospace, Menlo, Consolas, monospace; word-break: break-all; margin: 8px 0; }
     .row { display: flex; gap: 8px; margin-bottom: 16px; }
     .row button { flex: 1; }
@@ -19,7 +19,7 @@
 
   <fieldset class="homey-form-fieldset">
     <legend class="homey-form-legend" data-t="settings.url_title"></legend>
-    <code class="url" id="url">…</code>
+    <textarea class="url" id="url" rows="3" readonly></textarea>
     <div class="row">
       <button class="homey-button-primary" id="copy" data-t="settings.copy"></button>
       <button class="homey-button-secondary" id="regen" data-t="settings.regenerate"></button>
@@ -44,7 +44,7 @@
         <option value="pin" data-t="device.method.pin"></option>
       </select>
     </div>
-    <code class="url" id="customUrl">…</code>
+    <textarea class="url" id="customUrl" rows="3" readonly></textarea>
     <div class="row"><button class="homey-button-primary" id="copyCustom" data-t="settings.copy"></button></div>
   </fieldset>
 
@@ -60,6 +60,23 @@
   </fieldset>
 
 <script>
+  // Homey's in-app browser blocks the async clipboard API and text selection in
+  // ordinary elements. A selected read-only textarea + execCommand('copy') works
+  // there; if even that fails the text stays selected for a manual copy.
+  function copyField(el, onDone) {
+    el.focus();
+    el.select();
+    try { el.setSelectionRange(0, el.value.length); } catch (e) { /* not supported */ }
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    if (ok) return onDone(true);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(el.value).then(function () { onDone(true); }, function () { onDone(false); });
+    } else {
+      onDone(false);
+    }
+  }
+
   function onHomeyReady(Homey) {
     document.querySelectorAll('[data-t]').forEach(function (el) {
       el.textContent = Homey.__(el.getAttribute('data-t'));
@@ -72,7 +89,7 @@
       var url = baseUrl;
       if (person) url += '&person=' + encodeURIComponent(person);
       if (method) url += '&method=' + method;
-      document.getElementById('customUrl').textContent = url;
+      document.getElementById('customUrl').value = url;
     }
     document.getElementById('person').addEventListener('input', buildCustom);
     document.getElementById('method').addEventListener('change', buildCustom);
@@ -80,7 +97,7 @@
     function render(info) {
       baseUrl = info.url;
       buildCustom();
-      document.getElementById('url').textContent = info.url;
+      document.getElementById('url').value = info.url;
       var e = info.lastEvent;
       document.getElementById('last').textContent = e
         ? Homey.__('settings.last') + ' ' + new Date(e.at).toLocaleString() + ' — ' + (e.person || '-') + ' (' + e.type + '), ' + (e.alarm || '')
@@ -95,15 +112,9 @@
     }
 
     function copyFrom(id) {
-      var text = document.getElementById(id).textContent;
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(function () { Homey.alert(Homey.__('settings.copied')); });
-      } else {
-        var range = document.createRange();
-        range.selectNodeContents(document.getElementById(id));
-        window.getSelection().removeAllRanges();
-        window.getSelection().addRange(range);
-      }
+      copyField(document.getElementById(id), function (ok) {
+        Homey.alert(Homey.__(ok ? 'settings.copied' : 'settings.copy_manual'));
+      });
     }
     document.getElementById('copy').addEventListener('click', function () { copyFrom('url'); });
     document.getElementById('copyCustom').addEventListener('click', function () { copyFrom('customUrl'); });

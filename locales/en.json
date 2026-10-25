@@ -29,7 +29,8 @@
       "host_label": "Proxy IP address",
       "key_label": "Proxy encryption key (optional)",
       "find": "The IP and key are stored in Home Assistant. Run in the same terminal (key is empty if the device doesn't use encryption):"
-    }
+    },
+    "copy_manual": "Select"
   },
   "device": {
     "missing_key": "Offline key/slot missing or invalid. Check the device settings.",
@@ -63,6 +64,7 @@
     "builder_text": "Create one alarm in UniFi per person and method, each with its own URL. Then Homey always knows who and how, even if UniFi doesn't send the name.",
     "person": "Person",
     "method": "Method",
-    "method_auto": "From UniFi (automatic)"
+    "method_auto": "From UniFi (automatic)",
+    "copy_manual": "Couldn't copy automatically. The URL is selected – long-press it and choose Copy."
   }
 }

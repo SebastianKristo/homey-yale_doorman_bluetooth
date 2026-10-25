@@ -29,7 +29,8 @@
       "host_label": "Proxy IP-adresse",
       "key_label": "Proxy krypteringsnøkkel (valgfritt)",
       "find": "IP og nøkkel finnes i Home Assistant. Kjør i samme terminal (key er tom hvis enheten ikke bruker kryptering):"
-    }
+    },
+    "copy_manual": "Marker"
   },
   "device": {
     "missing_key": "Offline-nøkkel/slot mangler eller er ugyldig. Sjekk enhetsinnstillingene.",
@@ -63,6 +64,7 @@
     "builder_text": "Lag én alarm i UniFi per person og metode, og gi hver sin adresse. Da vet Homey alltid hvem og hvordan, selv om UniFi ikke sender navnet.",
     "person": "Person",
     "method": "Metode",
-    "method_auto": "Fra UniFi (automatisk)"
+    "method_auto": "Fra UniFi (automatisk)",
+    "copy_manual": "Kunne ikke kopiere automatisk. Adressen er markert – hold fingeren på den og velg Kopier."
   }
 }
