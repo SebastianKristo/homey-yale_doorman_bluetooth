@@ -135,5 +135,8 @@
   "2.4.0": {
     "en": "Multiple ESPHome proxies (one per line). Connects without encryption when a proxy doesn't use it, instead of failing with \"Bad format\".",
     "no": "Flere ESPHome-proxyer (én per linje). Kobler til uten kryptering når proxyen ikke bruker det, i stedet for å feile med «Bad format»."
+  },
+  "2.4.1": {
+    "en": "new fix"
   }
 }
