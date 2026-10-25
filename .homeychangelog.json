@@ -142,5 +142,8 @@
   "2.4.2": {
     "en": "ESPHome proxy: free the proxy's Bluetooth slot after a failed connection, longer connect timeout, clear message when the proxy has no free slots.",
     "no": "ESPHome-proxy: frigjør proxyens Bluetooth-plass etter mislykket tilkobling, lengre ventetid, tydelig melding når proxyen ikke har ledige plasser."
+  },
+  "2.4.3": {
+    "en": "new fix"
   }
 }
