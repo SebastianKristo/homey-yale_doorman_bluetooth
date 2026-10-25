@@ -92,5 +92,9 @@
   "2.0.1": {
     "en": "Includes all changes up to 1.4.1 (help in pairing).",
     "no": "Inneholder alle endringer til og med 1.4.1 (hjelp i parringen)."
+  },
+  "2.1.0": {
+    "en": "Receive webhooks from UniFi Alarm Manager / UniFi Access (face recognition, fingerprint) as a Flow trigger.",
+    "no": "Mottar webhooks fra UniFi Alarm Manager / UniFi Access (ansiktsgjenkjenning, fingeravtrykk) som Flow-trigger."
   }
 }

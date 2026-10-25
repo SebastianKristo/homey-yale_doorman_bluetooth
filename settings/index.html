@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+<head>
+  <script type="text/javascript" src="/homey.js" data-origin="settings"></script>
+  <style>
+    body { padding: 0 4px 24px; }
+    .url { display: block; padding: 12px; border-radius: 8px; background: #1e2430; color: #e8eaed;
+      font: 12px/1.45 ui-monospace, Menlo, Consolas, monospace; word-break: break-all; margin: 8px 0; }
+    .row { display: flex; gap: 8px; margin-bottom: 16px; }
+    .row button { flex: 1; }
+    ol { padding-left: 18px; } li { margin: 6px 0; line-height: 1.4; }
+    .warn { padding: 10px 12px; border-radius: 8px; background: #fff4d6; color: #5c4400; line-height: 1.4; }
+    .last { font-size: 13px; opacity: .85; line-height: 1.5; }
+  </style>
+</head>
+<body>
+  <h1 class="homey-title" data-t="settings.title"></h1>
+  <p class="homey-subtitle" data-t="settings.intro"></p>
+
+  <fieldset class="homey-form-fieldset">
+    <legend class="homey-form-legend" data-t="settings.url_title"></legend>
+    <code class="url" id="url">…</code>
+    <div class="row">
+      <button class="homey-button-primary" id="copy" data-t="settings.copy"></button>
+      <button class="homey-button-secondary" id="regen" data-t="settings.regenerate"></button>
+    </div>
+    <p class="last" id="last"></p>
+  </fieldset>
+
+  <fieldset class="homey-form-fieldset">
+    <legend class="homey-form-legend" data-t="settings.setup_title"></legend>
+    <ol>
+      <li data-t="settings.step1"></li>
+      <li data-t="settings.step2"></li>
+      <li data-t="settings.step3"></li>
+      <li data-t="settings.step4"></li>
+    </ol>
+    <p class="warn" data-t="settings.warning"></p>
+  </fieldset>
+
+<script>
+  function onHomeyReady(Homey) {
+    document.querySelectorAll('[data-t]').forEach(function (el) {
+      el.textContent = Homey.__(el.getAttribute('data-t'));
+    });
+
+    function render(info) {
+      document.getElementById('url').textContent = info.url;
+      var e = info.lastEvent;
+      document.getElementById('last').textContent = e
+        ? Homey.__('settings.last') + ' ' + new Date(e.at).toLocaleString() + ' — ' + (e.person || '-') + ' (' + e.type + '), ' + (e.alarm || '')
+        : Homey.__('settings.none');
+    }
+
+    function load() {
+      Homey.api('GET', '/webhook-info', null, function (err, info) {
+        if (err) return Homey.alert(err.message || err);
+        render(info);
+      });
+    }
+
+    document.getElementById('copy').addEventListener('click', function () {
+      var text = document.getElementById('url').textContent;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { Homey.alert(Homey.__('settings.copied')); });
+      } else {
+        var range = document.createRange();
+        range.selectNodeContents(document.getElementById('url'));
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+      }
+    });
+
+    document.getElementById('regen').addEventListener('click', function () {
+      Homey.confirm(Homey.__('settings.regenerate_confirm'), 'warning', function (err, ok) {
+        if (!ok) return;
+        Homey.api('POST', '/webhook-token', null, function (e, info) {
+          if (e) return Homey.alert(e.message || e);
+          render(info);
+        });
+      });
+    });
+
+    load();
+    Homey.ready();
+  }
+</script>
+</body>
+</html>

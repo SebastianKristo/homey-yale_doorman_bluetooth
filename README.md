@@ -75,6 +75,19 @@ f.eks. Everything Presence One, slik Home Assistant gjør. Alt er fortsatt lokal
 
 Deaktiver `yalexs_ble` i Home Assistant, ellers kjemper de om låsen.
 
+## Lås opp med ansikt eller fingeravtrykk (UniFi)
+Appen tar imot webhooks fra **UniFi Protect Alarm Manager** (ansiktsgjenkjenning) og **UniFi Access**
+(fingeravtrykk/NFC) og utløser Flow-kortet «UniFi-hendelse mottatt» med tokens *Person*, *Type*
+(`face`, `fingerprint`, `nfc` …), *Resultat*, *Alarmnavn* og *Enhet*.
+
+1. Homey-appen → Apper → Yale lokal Bluetooth → **Innstillinger**: kopier webhook-adressen.
+2. UniFi Protect → Alarm Manager → Create Alarm → trigger (f.eks. Face → Known) → Action **Webhook**, POST, lim inn adressen.
+3. Lag en Flow: *Når* UniFi-hendelse mottatt, *og* Person er f.eks. «Sebastian» *og* Resultat er `ACCESS`, *så* lås opp.
+
+Adressen inneholder en hemmelig nøkkel og virker som en nøkkel til døren for alle på nettverket som kjenner
+den. Lag ny nøkkel i innstillingene hvis den kommer på avveie. Appen låser aldri opp av seg selv – det er
+alltid Flowen din som avgjør.
+
 ## Slik fungerer det
 - Lås/lås opp: kobler til, gjør AES-håndtrykk med offline-nøkkelen, sender kommandoen og leser
   faktisk status etterpå. Forbindelsen lukkes etter 20 s uten aktivitet.

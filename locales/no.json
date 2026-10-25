@@ -33,5 +33,22 @@
   },
   "device": {
     "missing_key": "Offline-nøkkel/slot mangler eller er ugyldig. Sjekk enhetsinnstillingene."
+  },
+  "settings": {
+    "title": "UniFi-webhook",
+    "intro": "Lås opp med ansiktsgjenkjenning (UniFi Protect) eller fingeravtrykk (UniFi Access). UniFi sender en webhook til Homey, og du bestemmer i Flow hva som skal skje.",
+    "url_title": "Webhook-adresse",
+    "copy": "Kopier",
+    "copied": "Adressen er kopiert.",
+    "regenerate": "Ny nøkkel",
+    "regenerate_confirm": "Lage ny nøkkel? Den gamle adressen slutter å virke, og må byttes i UniFi.",
+    "last": "Siste hendelse:",
+    "none": "Ingen hendelser mottatt ennå.",
+    "setup_title": "Oppsett i UniFi",
+    "step1": "UniFi Protect: Alarm Manager → Create Alarm. Velg trigger, f.eks. «Face → Known» for bestemte personer, eller fingeravtrykk/NFC fra UniFi Access-leseren, og velg kamera/leser ved døren.",
+    "step2": "Under Action: velg «Webhook», metode POST, og lim inn adressen over.",
+    "step3": "I Homey: lag en Flow med «UniFi-hendelse mottatt». Sjekk at Person er den du forventer og at Resultat er ACCESS, og bruk deretter «Lås opp» på låsen.",
+    "step4": "Test: utløs alarmen i UniFi, og se at «Siste hendelse» over oppdateres.",
+    "warning": "Adressen virker som en nøkkel til døren for alle som kan nå Homey på nettverket. Del den ikke. Lag ny nøkkel hvis den har kommet på avveie. Lås aldri opp uten å sjekke Person i Flowen."
   }
 }

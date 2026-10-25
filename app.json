@@ -1,6 +1,6 @@
 {
   "id": "no.kristo.yaleble",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -153,6 +153,91 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=lock"
+          }
+        ]
+      },
+      {
+        "id": "unifi_event",
+        "title": {
+          "en": "UniFi event received",
+          "no": "UniFi-hendelse mottatt"
+        },
+        "hint": {
+          "en": "A webhook from UniFi Alarm Manager / UniFi Access, e.g. face recognition or fingerprint. Check the person in the Flow before unlocking.",
+          "no": "En webhook fra UniFi Alarm Manager / UniFi Access, f.eks. ansiktsgjenkjenning eller fingeravtrykk. Sjekk personen i Flowen før du låser opp."
+        },
+        "tokens": [
+          {
+            "name": "person",
+            "type": "string",
+            "title": {
+              "en": "Person",
+              "no": "Person"
+            },
+            "example": {
+              "en": "Sebastian",
+              "no": "Sebastian"
+            }
+          },
+          {
+            "name": "type",
+            "type": "string",
+            "title": {
+              "en": "Type",
+              "no": "Type"
+            },
+            "example": {
+              "en": "face",
+              "no": "face"
+            }
+          },
+          {
+            "name": "result",
+            "type": "string",
+            "title": {
+              "en": "Result",
+              "no": "Resultat"
+            },
+            "example": {
+              "en": "ACCESS",
+              "no": "ACCESS"
+            }
+          },
+          {
+            "name": "alarm",
+            "type": "string",
+            "title": {
+              "en": "Alarm name",
+              "no": "Alarmnavn"
+            },
+            "example": {
+              "en": "Front door face",
+              "no": "Inngang ansikt"
+            }
+          },
+          {
+            "name": "device",
+            "type": "string",
+            "title": {
+              "en": "Device",
+              "no": "Enhet"
+            },
+            "example": {
+              "en": "G4 Doorbell",
+              "no": "G4 Doorbell"
+            }
+          },
+          {
+            "name": "rawType",
+            "type": "string",
+            "title": {
+              "en": "Raw trigger",
+              "no": "Rå trigger"
+            },
+            "example": {
+              "en": "face_known",
+              "no": "face_known"
+            }
           }
         ]
       }
@@ -377,5 +462,25 @@
   "source": "https://github.com/SebastianKristo/homey-yale_doorman_bluetooth",
   "bugs": {
     "url": "https://github.com/SebastianKristo/homey-yale_doorman_bluetooth/issues"
+  },
+  "api": {
+    "unifiPost": {
+      "method": "POST",
+      "path": "/unifi",
+      "public": true
+    },
+    "unifiGet": {
+      "method": "GET",
+      "path": "/unifi",
+      "public": true
+    },
+    "webhookInfo": {
+      "method": "GET",
+      "path": "/webhook-info"
+    },
+    "regenerateToken": {
+      "method": "POST",
+      "path": "/webhook-token"
+    }
   }
 }

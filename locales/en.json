@@ -33,5 +33,22 @@
   },
   "device": {
     "missing_key": "Offline key/slot missing or invalid. Check the device settings."
+  },
+  "settings": {
+    "title": "UniFi webhook",
+    "intro": "Unlock with face recognition (UniFi Protect) or fingerprint (UniFi Access). UniFi sends a webhook to Homey, and you decide in a Flow what happens.",
+    "url_title": "Webhook URL",
+    "copy": "Copy",
+    "copied": "The URL has been copied.",
+    "regenerate": "New key",
+    "regenerate_confirm": "Create a new key? The old URL stops working and must be replaced in UniFi.",
+    "last": "Last event:",
+    "none": "No events received yet.",
+    "setup_title": "Setup in UniFi",
+    "step1": "UniFi Protect: Alarm Manager → Create Alarm. Choose a trigger, e.g. \"Face → Known\" for specific people, or fingerprint/NFC from the UniFi Access reader, and select the camera/reader at the door.",
+    "step2": "Under Action: choose \"Webhook\", method POST, and paste the URL above.",
+    "step3": "In Homey: create a Flow with \"UniFi event received\". Check that Person is who you expect and Result is ACCESS, then use \"Unlock\" on the lock.",
+    "step4": "Test: trigger the alarm in UniFi and check that \"Last event\" above updates.",
+    "warning": "This URL works like a key to the door for anyone who can reach Homey on the network. Don't share it. Create a new key if it has leaked. Never unlock without checking Person in the Flow."
   }
 }
