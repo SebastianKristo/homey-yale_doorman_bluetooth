@@ -1,0 +1,25 @@
+name: Publish Homey App
+
+on:
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate
+        uses: athombv/github-action-homey-app-validate@master
+        with:
+          level: publish
+
+      - name: Publish
+        uses: athombv/github-action-homey-app-publish@master
+        id: publish
+        with:
+          personal_access_token: ${{ secrets.HOMEY_PAT }}
+
+      - name: Link
+        run: |
+          echo "Gå til ${{ steps.publish.outputs.url }} og trykk Release to Test" >> $GITHUB_STEP_SUMMARY
