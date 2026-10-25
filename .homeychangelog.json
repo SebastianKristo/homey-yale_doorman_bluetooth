@@ -23,5 +23,8 @@
   "1.1.2": {
     "en": "Fix connection error (ATT error 0x0e) when connecting to the lock.",
     "no": "Retter tilkoblingsfeil (ATT error 0x0e) mot låsen."
+  },
+  "1.1.3": {
+    "en": "new fix"
   }
 }
