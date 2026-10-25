@@ -30,5 +30,8 @@
   "1.1.4": {
     "en": "Error messages show which step failed; fall back to reads if the lock rejects notifications.",
     "no": "Feilmeldinger viser hvilket steg som feilet; leser svar direkte hvis låsen avviser varslinger."
+  },
+  "1.1.5": {
+    "en": "new fix"
   }
 }
