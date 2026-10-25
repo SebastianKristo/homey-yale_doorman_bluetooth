@@ -1,6 +1,6 @@
 {
   "id": "no.kristo.yaleble",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -646,12 +646,12 @@
   "api": {
     "unifiPost": {
       "method": "POST",
-      "path": "/unifi",
+      "path": "/unifi/:key",
       "public": true
     },
     "unifiGet": {
       "method": "GET",
-      "path": "/unifi",
+      "path": "/unifi/:key",
       "public": true
     },
     "webhookInfo": {

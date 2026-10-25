@@ -120,5 +120,9 @@
   },
   "2.3.1": {
     "en": "new fix"
+  },
+  "2.3.2": {
+    "en": "Fix webhooks being rejected by Homey (\"Missing Session ID in Token\"). New URL format: copy the URLs into UniFi again.",
+    "no": "Retter at Homey avviste webhooks («Missing Session ID in Token»). Nytt adresseformat: kopier adressene inn i UniFi på nytt."
   }
 }

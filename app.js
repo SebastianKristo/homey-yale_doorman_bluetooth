@@ -51,7 +51,7 @@ class YaleBleApp extends Homey.App {
 
   async getWebhookInfo() {
     return {
-      url: `${await this.baseUrl()}?token=${this.homey.settings.get('webhook_token')}`,
+      url: `${await this.baseUrl()}/${this.homey.settings.get('webhook_token')}`,
       lastEvent: this.homey.settings.get('webhook_last_event') || null,
     };
   }
@@ -81,7 +81,7 @@ class YaleBleApp extends Homey.App {
       locks,
       rules: this.getRules().map(({ token, ...rule }) => ({
         ...rule,
-        url: `${base}?token=${token}`,
+        url: `${base}/${token}`,
         lockName: (locks.find((l) => l.id === rule.deviceId) || {}).name || '?',
       })),
       lastEvent: this.homey.settings.get('webhook_last_event') || null,
@@ -155,9 +155,9 @@ class YaleBleApp extends Homey.App {
     if (last) this.homey.settings.set('webhook_last_event', { ...last, outcome });
   }
 
-  async onUnifiWebhook({ query = {}, body = {} }) {
-    const rule = this.getRules().find((r) => sameToken(query.token, r.token));
-    if (!rule && !sameToken(query.token, this.homey.settings.get('webhook_token'))) {
+  async onUnifiWebhook({ key, query = {}, body = {} }) {
+    const rule = this.getRules().find((r) => sameToken(key, r.token));
+    if (!rule && !sameToken(key, this.homey.settings.get('webhook_token'))) {
       this.log('Rejected UniFi webhook with invalid token');
       const err = new Error('Unauthorized');
       err.statusCode = 401;

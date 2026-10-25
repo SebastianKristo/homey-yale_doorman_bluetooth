@@ -1,12 +1,14 @@
 'use strict';
 
 module.exports = {
-  // Public: called by UniFi; protected by the secret token in the URL
-  async unifiPost({ homey, query, body }) {
-    return homey.app.onUnifiWebhook({ query, body });
+  // Public: called by UniFi; protected by the secret key in the URL
+  // The key is in the path: Homey treats a ?token= query parameter as its own
+  // login token and rejects the request before it reaches the app
+  async unifiPost({ homey, params, query, body }) {
+    return homey.app.onUnifiWebhook({ key: params.key, query, body });
   },
-  async unifiGet({ homey, query }) {
-    return homey.app.onUnifiWebhook({ query, body: {} });
+  async unifiGet({ homey, params, query }) {
+    return homey.app.onUnifiWebhook({ key: params.key, query, body: {} });
   },
 
   // Used by the app settings page (requires Homey login)
