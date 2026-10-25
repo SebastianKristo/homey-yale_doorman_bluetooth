@@ -1,6 +1,6 @@
 {
   "id": "no.kristo.yaleble",
-  "version": "2.2.3",
+  "version": "2.3.0",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -661,6 +661,22 @@
     "regenerateToken": {
       "method": "POST",
       "path": "/webhook-token"
+    },
+    "listRules": {
+      "method": "GET",
+      "path": "/rules"
+    },
+    "createRule": {
+      "method": "POST",
+      "path": "/rules"
+    },
+    "updateRule": {
+      "method": "PUT",
+      "path": "/rules/:id"
+    },
+    "deleteRule": {
+      "method": "DELETE",
+      "path": "/rules/:id"
     }
   }
 }

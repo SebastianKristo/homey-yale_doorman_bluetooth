@@ -4,13 +4,22 @@
   <script type="text/javascript" src="/homey.js" data-origin="settings"></script>
   <style>
     body { padding: 0 4px 24px; }
-    .url { display: block; resize: none; width: 100%; box-sizing: border-box; border: 0; outline: none; -webkit-user-select: text; user-select: text; padding: 12px; border-radius: 8px; background: #1e2430; color: #e8eaed;
+    .url { display: block; width: 100%; box-sizing: border-box; resize: none; border: 0; outline: none;
+      -webkit-user-select: text; user-select: text; padding: 10px; border-radius: 8px; background: #1e2430; color: #e8eaed;
       font: 12px/1.45 ui-monospace, Menlo, Consolas, monospace; word-break: break-all; margin: 8px 0; }
-    .row { display: flex; gap: 8px; margin-bottom: 16px; }
+    .rule { border: 1px solid rgba(127,127,127,.3); border-radius: 12px; padding: 12px; margin: 10px 0; }
+    .rule.off { opacity: .55; }
+    .rule-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .rule-title { font-weight: 600; line-height: 1.3; }
+    .rule-sub { font-size: 13px; opacity: .75; }
+    .row { display: flex; gap: 8px; }
     .row button { flex: 1; }
+    .empty { opacity: .7; font-style: italic; }
     ol { padding-left: 18px; } li { margin: 6px 0; line-height: 1.4; }
     .warn { padding: 10px 12px; border-radius: 8px; background: #fff4d6; color: #5c4400; line-height: 1.4; }
-    .last { font-size: 13px; opacity: .85; line-height: 1.5; }
+    .last { font-size: 13px; line-height: 1.5; }
+    details summary { cursor: pointer; font-weight: 600; padding: 6px 0; }
+    .switch { display: flex; align-items: center; gap: 6px; font-size: 13px; white-space: nowrap; }
   </style>
 </head>
 <body>
@@ -18,18 +27,12 @@
   <p class="homey-subtitle" data-t="settings.intro"></p>
 
   <fieldset class="homey-form-fieldset">
-    <legend class="homey-form-legend" data-t="settings.url_title"></legend>
-    <textarea class="url" id="url" rows="3" readonly></textarea>
-    <div class="row">
-      <button class="homey-button-primary" id="copy" data-t="settings.copy"></button>
-      <button class="homey-button-secondary" id="regen" data-t="settings.regenerate"></button>
-    </div>
-    <p class="last" id="last"></p>
+    <legend class="homey-form-legend" data-t="settings.rules_title"></legend>
+    <div id="rules"></div>
   </fieldset>
 
   <fieldset class="homey-form-fieldset">
-    <legend class="homey-form-legend" data-t="settings.builder_title"></legend>
-    <p data-t="settings.builder_text"></p>
+    <legend class="homey-form-legend" data-t="settings.add_title"></legend>
     <div class="homey-form-group">
       <label class="homey-form-label" for="person" data-t="settings.person"></label>
       <input class="homey-form-input" id="person" type="text" placeholder="Sebastian" />
@@ -37,15 +40,23 @@
     <div class="homey-form-group">
       <label class="homey-form-label" for="method" data-t="settings.method"></label>
       <select class="homey-form-select" id="method">
-        <option value="" data-t="settings.method_auto"></option>
         <option value="face" data-t="device.method.face"></option>
         <option value="fingerprint" data-t="device.method.fingerprint"></option>
         <option value="nfc" data-t="device.method.nfc"></option>
         <option value="pin" data-t="device.method.pin"></option>
+        <option value="other" data-t="device.method.other"></option>
       </select>
     </div>
-    <textarea class="url" id="customUrl" rows="3" readonly></textarea>
-    <div class="row"><button class="homey-button-primary" id="copyCustom" data-t="settings.copy"></button></div>
+    <div class="homey-form-group">
+      <label class="homey-form-label" for="lock" data-t="settings.lock"></label>
+      <select class="homey-form-select" id="lock"></select>
+    </div>
+    <button class="homey-button-primary-full" id="add" data-t="settings.add"></button>
+  </fieldset>
+
+  <fieldset class="homey-form-fieldset">
+    <legend class="homey-form-legend" data-t="settings.last_title"></legend>
+    <p class="last" id="last"></p>
   </fieldset>
 
   <fieldset class="homey-form-fieldset">
@@ -54,10 +65,19 @@
       <li data-t="settings.step1"></li>
       <li data-t="settings.step2"></li>
       <li data-t="settings.step3"></li>
-      <li data-t="settings.step4"></li>
     </ol>
     <p class="warn" data-t="settings.warning"></p>
   </fieldset>
+
+  <details>
+    <summary data-t="settings.advanced_title"></summary>
+    <p data-t="settings.advanced_text"></p>
+    <textarea class="url" id="url" rows="3" readonly></textarea>
+    <div class="row">
+      <button class="homey-button-secondary" id="copy" data-t="settings.copy"></button>
+      <button class="homey-button-secondary" id="regen" data-t="settings.regenerate"></button>
+    </div>
+  </details>
 
 <script>
   // Homey's in-app browser blocks the async clipboard API and text selection in
@@ -78,54 +98,114 @@
   }
 
   function onHomeyReady(Homey) {
-    document.querySelectorAll('[data-t]').forEach(function (el) {
-      el.textContent = Homey.__(el.getAttribute('data-t'));
-    });
+    var t = function (k) { return Homey.__(k); };
+    document.querySelectorAll('[data-t]').forEach(function (el) { el.textContent = t(el.getAttribute('data-t')); });
 
-    var baseUrl = '';
-    function buildCustom() {
-      var person = document.getElementById('person').value.trim();
-      var method = document.getElementById('method').value;
-      var url = baseUrl;
-      if (person) url += '&person=' + encodeURIComponent(person);
-      if (method) url += '&method=' + method;
-      document.getElementById('customUrl').value = url;
+    function copied(ok) { Homey.alert(t(ok ? 'settings.copied' : 'settings.copy_manual')); }
+    function fail(err) { Homey.alert((err && err.message) || String(err), 'error'); }
+
+    function el(tag, cls, text) {
+      var e = document.createElement(tag);
+      if (cls) e.className = cls;
+      if (text !== undefined) e.textContent = text;
+      return e;
     }
-    document.getElementById('person').addEventListener('input', buildCustom);
-    document.getElementById('method').addEventListener('change', buildCustom);
 
-    function render(info) {
-      baseUrl = info.url;
-      buildCustom();
-      document.getElementById('url').value = info.url;
-      var e = info.lastEvent;
+    // "ignored (repeat)" -> "ignorert (gjentatt)" etc.
+    function outcomeText(o) {
+      var m = String(o || '').match(/^(\w+)(?::\s*|\s*\()?(.*?)\)?$/);
+      if (!m) return o || '';
+      var word = t('settings.outcome.' + m[1]);
+      if (!word || word.indexOf('settings.') === 0) return o;
+      var detail = m[2] ? (t('settings.outcome.' + m[2]) || m[2]) : '';
+      if (detail.indexOf('settings.') === 0) detail = m[2];
+      return detail ? word + ' (' + detail + ')' : word;
+    }
+
+    function renderLast(e) {
       document.getElementById('last').textContent = e
-        ? Homey.__('settings.last') + ' ' + new Date(e.at).toLocaleString() + ' — ' + (e.person || '-') + ' (' + e.type + '), ' + (e.alarm || '')
-        : Homey.__('settings.none');
+        ? new Date(e.at).toLocaleString() + ' — ' + (e.person || '-') + ' (' + t('device.method.' + e.type) + ') — ' + (e.outcome || '')
+        : t('settings.none');
+    }
+
+    function render(data) {
+      var lockSelect = document.getElementById('lock');
+      lockSelect.innerHTML = '';
+      data.locks.forEach(function (l) {
+        var o = el('option', null, l.name);
+        o.value = l.id;
+        lockSelect.appendChild(o);
+      });
+
+      var box = document.getElementById('rules');
+      box.innerHTML = '';
+      if (!data.rules.length) box.appendChild(el('p', 'empty', t('settings.no_rules')));
+      data.rules.forEach(function (r) {
+        var card = el('div', 'rule' + (r.enabled ? '' : ' off'));
+        var head = el('div', 'rule-head');
+        var titles = el('div');
+        titles.appendChild(el('div', 'rule-title', r.person + ' – ' + t('device.method.' + r.method)));
+        titles.appendChild(el('div', 'rule-sub', t('settings.unlocks') + ' ' + r.lockName));
+        head.appendChild(titles);
+
+        var sw = el('label', 'switch');
+        var cb = el('input');
+        cb.type = 'checkbox';
+        cb.checked = r.enabled;
+        cb.addEventListener('change', function () {
+          Homey.api('PUT', '/rules/' + r.id, { enabled: cb.checked }, function (err, d) { if (err) return fail(err); render(d); });
+        });
+        sw.appendChild(cb);
+        sw.appendChild(el('span', null, t('settings.active')));
+        head.appendChild(sw);
+        card.appendChild(head);
+
+        var url = el('textarea', 'url');
+        url.rows = 3;
+        url.readOnly = true;
+        url.value = r.url;
+        card.appendChild(url);
+
+        var row = el('div', 'row');
+        var copy = el('button', 'homey-button-primary', t('settings.copy'));
+        copy.addEventListener('click', function () { copyField(url, copied); });
+        var del = el('button', 'homey-button-danger', t('settings.delete'));
+        del.addEventListener('click', function () {
+          Homey.confirm(t('settings.delete_confirm'), 'warning', function (err, ok) {
+            if (!ok) return;
+            Homey.api('DELETE', '/rules/' + r.id, null, function (e, d) { if (e) return fail(e); render(d); });
+          });
+        });
+        row.appendChild(copy);
+        row.appendChild(del);
+        card.appendChild(row);
+        box.appendChild(card);
+      });
+      renderLast(data.lastEvent);
     }
 
     function load() {
-      Homey.api('GET', '/webhook-info', null, function (err, info) {
-        if (err) return Homey.alert(err.message || err);
-        render(info);
-      });
+      Homey.api('GET', '/rules', null, function (err, d) { if (err) return fail(err); render(d); });
+      Homey.api('GET', '/webhook-info', null, function (err, info) { if (!err) document.getElementById('url').value = info.url; });
     }
 
-    function copyFrom(id) {
-      copyField(document.getElementById(id), function (ok) {
-        Homey.alert(Homey.__(ok ? 'settings.copied' : 'settings.copy_manual'));
+    document.getElementById('add').addEventListener('click', function () {
+      Homey.api('POST', '/rules', {
+        person: document.getElementById('person').value,
+        method: document.getElementById('method').value,
+        deviceId: document.getElementById('lock').value,
+      }, function (err, d) {
+        if (err) return fail(err);
+        document.getElementById('person').value = '';
+        render(d);
       });
-    }
-    document.getElementById('copy').addEventListener('click', function () { copyFrom('url'); });
-    document.getElementById('copyCustom').addEventListener('click', function () { copyFrom('customUrl'); });
+    });
 
+    document.getElementById('copy').addEventListener('click', function () { copyField(document.getElementById('url'), copied); });
     document.getElementById('regen').addEventListener('click', function () {
-      Homey.confirm(Homey.__('settings.regenerate_confirm'), 'warning', function (err, ok) {
+      Homey.confirm(t('settings.regenerate_confirm'), 'warning', function (err, ok) {
         if (!ok) return;
-        Homey.api('POST', '/webhook-token', null, function (e, info) {
-          if (e) return Homey.alert(e.message || e);
-          render(info);
-        });
+        Homey.api('POST', '/webhook-token', null, function (e, info) { if (e) return fail(e); document.getElementById('url').value = info.url; });
       });
     });
 

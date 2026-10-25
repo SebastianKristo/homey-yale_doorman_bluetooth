@@ -76,25 +76,20 @@ f.eks. Everything Presence One, slik Home Assistant gjør. Alt er fortsatt lokal
 Deaktiver `yalexs_ble` i Home Assistant, ellers kjemper de om låsen.
 
 ## Lås opp med ansikt eller fingeravtrykk (UniFi)
-Appen tar imot webhooks fra **UniFi Protect Alarm Manager** (ansiktsgjenkjenning) og **UniFi Access**
-(fingeravtrykk/NFC) og utløser Flow-kortet «UniFi-hendelse mottatt» med tokens *Person*, *Type*
-(`face`, `fingerprint`, `nfc` …), *Resultat*, *Alarmnavn* og *Enhet*.
+Alt settes opp i appens innstillinger – ingen Flow trengs.
 
-1. Homey-appen → Apper → Yale lokal Bluetooth → **Innstillinger**: kopier webhook-adressen.
-2. UniFi Protect → Alarm Manager → Create Alarm → trigger (f.eks. Face → Known) → Action **Webhook**, POST, lim inn adressen.
-3. Lag en Flow: *Når* UniFi-hendelse mottatt, *og* Person er f.eks. «Sebastian» *og* Resultat er `ACCESS`,
-   *så* «Lås opp for person» med tokenene *Person* og *Type*.
+1. Homey-appen → Apper → Yale lokal Bluetooth → **Konfigurer app**.
+2. Under **Ny regel**: velg person, metode (ansikt, fingeravtrykk, NFC, PIN) og lås → **Legg til regel**.
+   Hver regel får sin egen webhook-adresse.
+3. UniFi Protect → Alarm Manager → Create Alarm → trigger for personen (f.eks. Face → Known med personen
+   valgt, eller fingeravtrykk fra Access-leseren) → Action **Webhook**, POST, lim inn regelens adresse.
 
-Låsen viser **Låst opp av** og **Opplåsingsmetode** (ansikt, fingeravtrykk, NFC, PIN, Homey, eller ukjent når
-den låses opp på selve låsen), og triggeren «Låst opp av person» kjører ved hver opplåsing.
+Appen låser opp og viser **Låst opp av** og **Opplåsingsmetode** på låsen. Den låser *ikke* opp hvis UniFi
+oppgir en annen person enn regelen, et avvist forsøk, eller samme regel innen 10 sekunder. En regel kan slås
+av eller slettes; da slutter adressen å virke med en gang. Hver adresse virker som en nøkkel til døren for alle
+på nettverket som kjenner den.
 
-**Adresse per person og metode:** Lag én alarm i UniFi per person/metode og legg til
-`&person=Sebastian&method=fingerprint` på adressen (innstillingssiden lager den for deg). Det som står i
-adressen går foran det UniFi sender.
-
-Adressen inneholder en hemmelig nøkkel og virker som en nøkkel til døren for alle på nettverket som kjenner
-den. Lag ny nøkkel i innstillingene hvis den kommer på avveie. Appen låser aldri opp av seg selv – det er
-alltid Flowen din som avgjør.
+For egne Flows finnes også en generell adresse (under «Avansert») som utløser «UniFi-hendelse mottatt».
 
 ## Slik fungerer det
 - Lås/lås opp: kobler til, gjør AES-håndtrykk med offline-nøkkelen, sender kommandoen og leser
