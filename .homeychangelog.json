@@ -127,5 +127,9 @@
   },
   "2.3.3": {
     "en": "new fix"
+  },
+  "2.3.4": {
+    "en": "Scan for the lock when Homey hasn't seen it recently, and a clearer message when it's out of range.",
+    "no": "Søker etter låsen når Homey ikke har sett den nylig, og tydeligere melding når den er utenfor rekkevidde."
   }
 }
