@@ -62,5 +62,9 @@
   "1.2.1": {
     "en": "New icons and images modelled on the Yale Doorman L3.",
     "no": "Nye ikoner og bilder laget etter Yale Doorman L3."
+  },
+  "1.3.0": {
+    "en": "New \"Always connected\" option for much faster lock/unlock. Lock/unlock respond immediately; jammed state is reported.",
+    "no": "Nytt valg «Alltid tilkoblet» for mye raskere lås/lås opp. Lås/lås opp svarer umiddelbart, og fastkjørt lås rapporteres."
   }
 }

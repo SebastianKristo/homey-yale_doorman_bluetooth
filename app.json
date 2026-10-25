@@ -1,6 +1,6 @@
 {
   "id": "no.kristo.yaleble",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -82,6 +82,13 @@
           "title": {
             "en": "Locked",
             "no": "Låst"
+          }
+        },
+        {
+          "id": "jammed",
+          "title": {
+            "en": "Jammed",
+            "no": "Fastkjørt"
           }
         }
       ]
@@ -221,6 +228,19 @@
             "no": "Statusoppdatering"
           },
           "children": [
+            {
+              "id": "always_connected",
+              "type": "checkbox",
+              "value": false,
+              "label": {
+                "en": "Always connected",
+                "no": "Alltid tilkoblet"
+              },
+              "hint": {
+                "en": "Keep the Bluetooth connection open, like Home Assistant's \"Always connected\". Much faster lock/unlock and instant state updates, but uses more of the lock's battery.",
+                "no": "Hold Bluetooth-forbindelsen åpen, som «Always connected» i Home Assistant. Mye raskere lås/lås opp og umiddelbar status, men bruker mer av låsens batteri."
+              }
+            },
             {
               "id": "scan_interval",
               "type": "number",

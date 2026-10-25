@@ -4,6 +4,9 @@ const Homey = require('homey');
 const { YaleLock } = require('../../lib/YaleBle');
 
 const PROXY_SCAN_MS = 5000;
+const VERIFY_DELAY_MS = 6000;
+const RECONNECT_MIN_MS = 5000;
+const RECONNECT_MAX_MS = 5 * 60 * 1000;
 
 const IDLE_DISCONNECT_MS = 20 * 1000;
 
@@ -19,10 +22,13 @@ class YaleLockDevice extends Homey.Device {
       await this.withLock(async (lock) => {
         if (value) await lock.lock();
         else await lock.unlock();
-        // Give the motor time to finish, then read real state
-        await new Promise((r) => this.homey.setTimeout(r, 4000));
-        await this.applyStatus(await lock.status());
       });
+      // Return as soon as the lock has accepted the command. The lock pushes the
+      // result when the motor stops; read the state afterwards as a fallback.
+      this.homey.clearTimeout(this.verifyTimer);
+      this.verifyTimer = this.homey.setTimeout(() => {
+        this.refreshStatus({ battery: false }).catch((e) => this.error('Verify failed', e.message));
+      }, VERIFY_DELAY_MS);
     });
 
     this.createLock();
@@ -60,10 +66,35 @@ class YaleLockDevice extends Homey.Device {
       });
       this.lock.on('status', (s) => this.applyStatus(s).catch(this.error));
       this.lock.on('battery', (b) => this.applyBattery(b).catch(this.error));
+      this.lock.on('disconnected', () => this.scheduleReconnect());
       this.setAvailable().catch(this.error);
     } catch (err) {
       this.setUnavailable(this.homey.__('device.missing_key')).catch(this.error);
     }
+  }
+
+  get alwaysConnected() {
+    return !!this.getSetting('always_connected');
+  }
+
+  // Keep the link up in "always connected" mode, backing off while the lock is unreachable
+  scheduleReconnect() {
+    this.homey.clearTimeout(this.reconnectTimer);
+    if (!this.alwaysConnected || this.stopped || !this.lock) return;
+    const delay = this.reconnectDelay || RECONNECT_MIN_MS;
+    this.reconnectTimer = this.homey.setTimeout(async () => {
+      try {
+        await this.withLock(async (lock) => {
+          await lock.connect();
+          await this.applyStatus(await lock.status());
+        });
+        this.reconnectDelay = RECONNECT_MIN_MS;
+      } catch (err) {
+        this.reconnectDelay = Math.min(delay * 2, RECONNECT_MAX_MS);
+        this.log(`Reconnect failed, next try in ${Math.round(this.reconnectDelay / 1000)} s`);
+        this.scheduleReconnect();
+      }
+    }, delay);
   }
 
   scheduleTimers() {
@@ -89,6 +120,8 @@ class YaleLockDevice extends Homey.Device {
   async checkAdvertisement() {
     // Nothing to compare against while busy or without a usable key
     if (this.busy || !this.lock) return;
+    // While connected the lock pushes its state itself
+    if (this.lock.connected) return;
     const md = this.proxyConfig ? await this.proxyManufacturerData() : await this.homeyManufacturerData();
     if (md && this.lastManufacturerData && md !== this.lastManufacturerData) {
       this.log('Advertisement changed, reading status');
@@ -159,9 +192,13 @@ class YaleLockDevice extends Homey.Device {
     } finally {
       this.busy -= 1;
       // Stay connected briefly to receive pushed state updates, then free the BLE link
-      this.idleTimer = this.homey.setTimeout(() => {
-        if (!this.busy && this.lock) this.lock.disconnect().catch(this.error);
-      }, IDLE_DISCONNECT_MS);
+      if (!this.alwaysConnected) {
+        this.idleTimer = this.homey.setTimeout(() => {
+          if (!this.busy && this.lock) this.lock.disconnect().catch(this.error);
+        }, IDLE_DISCONNECT_MS);
+      } else if (this.lock && !this.lock.connected) {
+        this.scheduleReconnect();
+      }
     }
   }
 
@@ -174,12 +211,23 @@ class YaleLockDevice extends Homey.Device {
         this.refreshStatus().catch((e) => this.error(e.message));
       }, 500);
     }
+    if (changedKeys.includes('always_connected')) {
+      this.homey.setTimeout(() => {
+        this.reconnectDelay = RECONNECT_MIN_MS;
+        if (this.alwaysConnected) this.scheduleReconnect();
+        else if (this.lock && !this.busy) this.lock.disconnect().catch(this.error);
+      }, 500);
+    }
     if (changedKeys.some((k) => k.endsWith('_interval'))) {
       this.homey.setTimeout(() => this.scheduleTimers(), 500);
     }
   }
 
   async onUninit() {
+    this.stopped = true;
+    this.homey.clearTimeout(this.reconnectTimer);
+    this.homey.clearTimeout(this.verifyTimer);
+    this.homey.clearTimeout(this.idleTimer);
     this.homey.clearInterval(this.pollTimer);
     this.homey.clearInterval(this.scanTimer);
     if (this.lock) await this.lock.disconnect().catch(() => {});

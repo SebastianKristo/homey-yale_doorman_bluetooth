@@ -61,3 +61,5 @@ Deaktiver `yalexs_ble` i Home Assistant, ellers kjemper de om låsen.
   hver full avlesning (standard hver time). Låsen rapporterer spenning, som regnes om til prosent med
   samme AA-tabell som Home Assistant.
 - Flow-handling: «Oppdater låsstatus».
+- **Alltid tilkoblet** (innstilling): holder forbindelsen åpen som i Home Assistant. Lås/lås opp går
+  nesten umiddelbart og status kommer med en gang, men låsens batteri brukes raskere.
