@@ -149,5 +149,8 @@
   "2.4.4": {
     "en": "Don't scan for the lock while connecting to it.",
     "no": "Søker ikke etter låsen mens appen kobler til den."
+  },
+  "2.4.5": {
+    "en": "new fix"
   }
 }
