@@ -96,5 +96,8 @@
   "2.1.0": {
     "en": "Receive webhooks from UniFi Alarm Manager / UniFi Access (face recognition, fingerprint) as a Flow trigger. The webhook URL is shown in the lock settings and the app settings.",
     "no": "Mottar webhooks fra UniFi Alarm Manager / UniFi Access (ansiktsgjenkjenning, fingeravtrykk) som Flow-trigger. Webhook-adressen vises i låsens innstillinger og appens innstillinger."
+  },
+  "2.1.1": {
+    "en": "new fix settings"
   }
 }
