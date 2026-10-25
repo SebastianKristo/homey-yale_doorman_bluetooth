@@ -42,6 +42,7 @@ class YaleLockDevice extends Homey.Device {
 
     this.createLock();
     this.scheduleTimers();
+    this.showWebhookUrl().catch(this.error);
     this.refreshStatus().catch((err) => this.error('Initial status failed', err.message));
   }
 
@@ -80,6 +81,12 @@ class YaleLockDevice extends Homey.Device {
     } catch (err) {
       this.setUnavailable(this.homey.__('device.missing_key')).catch(this.error);
     }
+  }
+
+  // Also show the UniFi webhook URL here, where users look for settings
+  async showWebhookUrl() {
+    const { url } = await this.homey.app.getWebhookInfo();
+    if (this.getSetting('webhook_url') !== url) await this.setSettings({ webhook_url: url });
   }
 
   get alwaysConnected() {

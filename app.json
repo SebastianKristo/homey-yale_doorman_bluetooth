@@ -447,6 +447,28 @@
               }
             }
           ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "UniFi webhook",
+            "no": "UniFi-webhook"
+          },
+          "children": [
+            {
+              "id": "webhook_url",
+              "type": "label",
+              "value": "",
+              "label": {
+                "en": "Webhook URL for UniFi Alarm Manager",
+                "no": "Webhook-adresse for UniFi Alarm Manager"
+              },
+              "hint": {
+                "en": "Paste this into UniFi Protect → Alarm Manager → Action: Webhook (POST). Use the Flow card \"UniFi event received\" and check Person and Result before unlocking. Keep it secret: it works like a key.",
+                "no": "Lim inn i UniFi Protect → Alarm Manager → Action: Webhook (POST). Bruk Flow-kortet «UniFi-hendelse mottatt» og sjekk Person og Resultat før du låser opp. Hold den hemmelig: den virker som en nøkkel."
+              }
+            }
+          ]
         }
       ],
       "energy": {

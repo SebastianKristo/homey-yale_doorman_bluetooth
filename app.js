@@ -14,6 +14,14 @@ class YaleBleApp extends Homey.App {
 
   regenerateWebhookToken() {
     this.homey.settings.set('webhook_token', crypto.randomBytes(24).toString('hex'));
+    // Keep the URL shown in the lock settings in sync
+    // On first start the driver isn't ready yet; devices show the URL on init then
+    try {
+      this.homey.drivers.getDriver('lock').getDevices()
+        .forEach((d) => d.showWebhookUrl().catch(this.error));
+    } catch (err) {
+      // Driver not initialised yet
+    }
   }
 
   async getWebhookInfo() {
