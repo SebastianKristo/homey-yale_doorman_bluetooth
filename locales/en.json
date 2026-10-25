@@ -2,7 +2,8 @@
   "pair": {
     "invalid_key": "The offline key must be exactly 32 hexadecimal characters.",
     "invalid_slot": "The slot must be a number between 0 and 255.",
-    "unknown_device": "Unknown device"
+    "unknown_device": "Unknown device",
+    "invalid_proxy_key": "The proxy encryption key must be the base64 key from ESPHome (44 characters)."
   },
   "device": {
     "missing_key": "Offline key/slot missing or invalid. Check the device settings."

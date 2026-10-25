@@ -3,6 +3,8 @@
 const Homey = require('homey');
 const { YaleLock } = require('../../lib/YaleBle');
 
+const PROXY_SCAN_MS = 5000;
+
 const IDLE_DISCONNECT_MS = 20 * 1000;
 
 class YaleLockDevice extends Homey.Device {
@@ -28,8 +30,20 @@ class YaleLockDevice extends Homey.Device {
     this.refreshStatus().catch((err) => this.error('Initial status failed', err.message));
   }
 
+  get proxyConfig() {
+    const host = String(this.getSetting('proxy_host') || '').trim();
+    if (!host) return null;
+    return { host, encryptionKey: String(this.getSetting('proxy_key') || '').trim() };
+  }
+
+  get mac() {
+    const { address, peripheralUuid } = this.getStore();
+    return address || peripheralUuid;
+  }
+
   createLock() {
     const { offline_key: key, offline_slot: slot } = this.getSettings();
+    const proxy = this.proxyConfig;
     this.lock = null;
     try {
       this.lock = new YaleLock({
@@ -38,6 +52,11 @@ class YaleLockDevice extends Homey.Device {
         key,
         slot,
         log: (...a) => this.log(...a),
+        openPeripheral: proxy
+          ? () => require('../../lib/EspProxy').connectViaProxy({
+            ...proxy, mac: this.mac, log: (...a) => this.log(...a),
+          })
+          : undefined,
       });
       this.lock.on('status', (s) => this.applyStatus(s).catch(this.error));
       this.lock.on('battery', (b) => this.applyBattery(b).catch(this.error));
@@ -70,13 +89,25 @@ class YaleLockDevice extends Homey.Device {
   async checkAdvertisement() {
     // Nothing to compare against while busy or without a usable key
     if (this.busy || !this.lock) return;
-    const adv = await this.homey.ble.find(this.getStore().peripheralUuid);
-    const md = adv && adv.manufacturerData ? Buffer.from(adv.manufacturerData).toString('hex') : null;
+    const md = this.proxyConfig ? await this.proxyManufacturerData() : await this.homeyManufacturerData();
     if (md && this.lastManufacturerData && md !== this.lastManufacturerData) {
       this.log('Advertisement changed, reading status');
       await this.refreshStatus({ battery: false });
     }
     if (md) this.lastManufacturerData = md;
+  }
+
+  async homeyManufacturerData() {
+    const adv = await this.homey.ble.find(this.getStore().peripheralUuid);
+    return adv && adv.manufacturerData ? Buffer.from(adv.manufacturerData).toString('hex') : null;
+  }
+
+  async proxyManufacturerData() {
+    const { getProxy } = require('../../lib/EspProxy');
+    const proxy = getProxy({ ...this.proxyConfig, log: (...a) => this.log(...a) });
+    const mac = this.mac.replace(/[^0-9a-f]/gi, '').toLowerCase();
+    const found = (await proxy.scan(PROXY_SCAN_MS)).find((a) => a.address.replace(/:/g, '') === mac);
+    return found ? found.manufacturerData : null;
   }
 
   async refreshStatus({ battery = true } = {}) {
@@ -135,7 +166,7 @@ class YaleLockDevice extends Homey.Device {
   }
 
   async onSettings({ changedKeys }) {
-    if (changedKeys.some((k) => k.startsWith('offline_'))) {
+    if (changedKeys.some((k) => k.startsWith('offline_') || k.startsWith('proxy_'))) {
       if (this.lock) await this.lock.disconnect().catch(() => {});
       // New settings are only readable after onSettings resolves
       this.homey.setTimeout(() => {

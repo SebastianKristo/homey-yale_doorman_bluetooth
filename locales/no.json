@@ -2,7 +2,8 @@
   "pair": {
     "invalid_key": "Offline-nøkkelen må være nøyaktig 32 heksadesimale tegn.",
     "invalid_slot": "Slot må være et tall mellom 0 og 255.",
-    "unknown_device": "Ukjent enhet"
+    "unknown_device": "Ukjent enhet",
+    "invalid_proxy_key": "Krypteringsnøkkelen for proxyen må være base64-nøkkelen fra ESPHome (44 tegn)."
   },
   "device": {
     "missing_key": "Offline-nøkkel/slot mangler eller er ugyldig. Sjekk enhetsinnstillingene."

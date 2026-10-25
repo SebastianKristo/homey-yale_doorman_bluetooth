@@ -1,6 +1,6 @@
 {
   "id": "no.kristo.yaleble",
-  "version": "1.1.11",
+  "version": "1.2.0",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -176,6 +176,41 @@
               "value": 1,
               "min": 0,
               "max": 255
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "ESPHome Bluetooth proxy (optional)",
+            "no": "ESPHome Bluetooth-proxy (valgfritt)"
+          },
+          "children": [
+            {
+              "id": "proxy_host",
+              "type": "text",
+              "value": "",
+              "label": {
+                "en": "Proxy IP address",
+                "no": "Proxy IP-adresse"
+              },
+              "hint": {
+                "en": "IP of an ESPHome device with bluetooth_proxy (e.g. Everything Presence One) near the lock. Leave empty to use Homey's own Bluetooth.",
+                "no": "IP til en ESPHome-enhet med bluetooth_proxy (f.eks. Everything Presence One) nær låsen. La stå tomt for å bruke Homeys egen Bluetooth."
+              }
+            },
+            {
+              "id": "proxy_key",
+              "type": "password",
+              "value": "",
+              "label": {
+                "en": "Proxy encryption key",
+                "no": "Proxy krypteringsnøkkel"
+              },
+              "hint": {
+                "en": "The api encryption key from the ESPHome configuration. Leave empty if the device has none.",
+                "no": "api-krypteringsnøkkelen fra ESPHome-konfigurasjonen. La stå tomt hvis enheten ikke har en."
+              }
             }
           ]
         },

@@ -38,6 +38,18 @@ homey app install
 ```
 Legg til enhet → «Yale-lås (Bluetooth)» → skriv inn nøkkel og slot → velg låsen.
 
+## Lang avstand: ESPHome Bluetooth-proxy
+Står Homey for langt fra låsen, kan appen gå via en ESPHome-enhet med `bluetooth_proxy` nær døren,
+f.eks. Everything Presence One, slik Home Assistant gjør. Alt er fortsatt lokalt.
+
+1. Proxyen må ha aktiv Bluetooth-proxy (`bluetooth_proxy: active: true`). Fungerer låsen via proxyen i
+   Home Assistant, er dette allerede på plass.
+2. I låsens innstillinger i Homey: fyll inn **Proxy IP-adresse** og eventuelt **Proxy krypteringsnøkkel**
+   (`api: encryption: key:` fra ESPHome-konfigurasjonen, 44 tegn).
+3. Ny lås kan også legges til direkte via proxyen: fyll inn proxy-feltene i parringen.
+
+Deaktiver `yalexs_ble` i Home Assistant, ellers kjemper de om låsen.
+
 ## Slik fungerer det
 - Lås/lås opp: kobler til, gjør AES-håndtrykk med offline-nøkkelen, sender kommandoen og leser
   faktisk status etterpå. Forbindelsen lukkes etter 20 s uten aktivitet.

@@ -54,5 +54,9 @@
   },
   "1.1.11": {
     "en": "new fix"
+  },
+  "1.2.0": {
+    "en": "Support for ESPHome Bluetooth proxies (e.g. Everything Presence One), so Homey no longer needs to be near the lock.",
+    "no": "Støtte for ESPHome Bluetooth-proxy (f.eks. Everything Presence One), så Homey ikke trenger å stå nær låsen."
   }
 }

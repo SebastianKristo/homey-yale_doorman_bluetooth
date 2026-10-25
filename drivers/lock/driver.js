@@ -30,16 +30,27 @@ class YaleLockDriver extends Homey.Driver {
   async onPair(session) {
     let credentials = null;
 
-    session.setHandler('credentials', async ({ key, slot }) => {
+    session.setHandler('credentials', async ({
+      key, slot, proxyHost, proxyKey,
+    }) => {
       const k = String(key || '').trim().toLowerCase();
       const s = Number(slot);
       if (!/^[0-9a-f]{32}$/.test(k)) throw new Error(this.homey.__('pair.invalid_key'));
       if (!Number.isInteger(s) || s < 0 || s > 255) throw new Error(this.homey.__('pair.invalid_slot'));
-      credentials = { key: k, slot: s };
+      const host = String(proxyHost || '').trim();
+      const encryptionKey = String(proxyKey || '').trim();
+      if (encryptionKey && Buffer.from(encryptionKey, 'base64').length !== 32) {
+        throw new Error(this.homey.__('pair.invalid_proxy_key'));
+      }
+      credentials = {
+        key: k, slot: s, proxyHost: host, proxyKey: encryptionKey,
+      };
       return true;
     });
 
     session.setHandler('list_devices', async () => {
+      if (credentials && credentials.proxyHost) return this.listViaProxy(credentials);
+
       const advertisements = await this.homey.ble.discover([], 20000);
       this.log(`Found ${advertisements.length} BLE devices`);
       advertisements.forEach((adv) => this.log(`  ${isYale(adv) ? '*' : ' '} ${describe(adv)}`));
@@ -64,6 +75,41 @@ class YaleLockDriver extends Homey.Driver {
           offline_slot: credentials ? credentials.slot : 1,
         },
       }));
+    });
+  }
+
+  async listViaProxy(credentials) {
+    const { getProxy } = require('../../lib/EspProxy');
+    const proxy = getProxy({
+      host: credentials.proxyHost,
+      encryptionKey: credentials.proxyKey,
+      log: (...a) => this.log(...a),
+    });
+    const found = await proxy.scan(15000);
+    this.log(`Proxy ${credentials.proxyHost} found ${found.length} BLE devices`);
+
+    const isYaleAdv = (a) => a.serviceUuids.some((u) => normUuid(u) === SERVICE_UUID)
+      || a.manufacturerIds.some((id) => MANUFACTURER_IDS.includes(id))
+      || NAME_PATTERN.test(a.name);
+    let candidates = found.filter(isYaleAdv);
+    const fallback = candidates.length === 0;
+    if (fallback) candidates = found.sort((a, b) => b.rssi - a.rssi);
+
+    return candidates.map((a) => {
+      const id = a.address.replace(/:/g, '');
+      return {
+        name: fallback
+          ? `${a.name || this.homey.__('pair.unknown_device')} (${a.address}, ${a.rssi} dBm)`
+          : a.name || `Yale ${a.address}`,
+        data: { id },
+        store: { peripheralUuid: id, address: a.address },
+        settings: {
+          offline_key: credentials.key,
+          offline_slot: credentials.slot,
+          proxy_host: credentials.proxyHost,
+          proxy_key: credentials.proxyKey,
+        },
+      };
     });
   }
 
