@@ -26,8 +26,8 @@
     "proxy": {
       "title": "Long distance? ESPHome Bluetooth proxy (optional)",
       "text": "If Homey is too far from the door, the lock can be controlled through an ESPHome device with Bluetooth proxy near the door, e.g. Everything Presence One. Leave empty to use Homey's own Bluetooth.",
-      "host_label": "Proxy IP address",
-      "key_label": "Proxy encryption key (optional)",
+      "host_label": "Proxy IP addresses (one per line)",
+      "key_label": "Encryption key (optional, for all)",
       "find": "The IP and key are stored in Home Assistant. Run in the same terminal (key is empty if the device doesn't use encryption):"
     },
     "copy_manual": "Select"

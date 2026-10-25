@@ -131,5 +131,9 @@
   "2.3.4": {
     "en": "Scan for the lock when Homey hasn't seen it recently, and a clearer message when it's out of range.",
     "no": "Søker etter låsen når Homey ikke har sett den nylig, og tydeligere melding når den er utenfor rekkevidde."
+  },
+  "2.4.0": {
+    "en": "Multiple ESPHome proxies (one per line). Connects without encryption when a proxy doesn't use it, instead of failing with \"Bad format\".",
+    "no": "Flere ESPHome-proxyer (én per linje). Kobler til uten kryptering når proxyen ikke bruker det, i stedet for å feile med «Bad format»."
   }
 }

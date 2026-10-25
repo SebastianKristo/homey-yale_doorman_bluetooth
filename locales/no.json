@@ -26,8 +26,8 @@
     "proxy": {
       "title": "Lang avstand? ESPHome Bluetooth-proxy (valgfritt)",
       "text": "Står Homey for langt fra døren, kan låsen styres via en ESPHome-enhet med Bluetooth-proxy nær døren, f.eks. Everything Presence One. La feltene stå tomme for å bruke Homeys egen Bluetooth.",
-      "host_label": "Proxy IP-adresse",
-      "key_label": "Proxy krypteringsnøkkel (valgfritt)",
+      "host_label": "Proxy IP-adresser (én per linje)",
+      "key_label": "Krypteringsnøkkel (valgfritt, for alle)",
       "find": "IP og nøkkel finnes i Home Assistant. Kjør i samme terminal (key er tom hvis enheten ikke bruker kryptering):"
     },
     "copy_manual": "Marker"

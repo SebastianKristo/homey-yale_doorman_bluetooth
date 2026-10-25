@@ -1,6 +1,6 @@
 {
   "id": "no.kristo.yaleble",
-  "version": "2.3.4",
+  "version": "2.4.0",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -508,15 +508,15 @@
           "children": [
             {
               "id": "proxy_host",
-              "type": "text",
+              "type": "textarea",
               "value": "",
               "label": {
-                "en": "Proxy IP address",
-                "no": "Proxy IP-adresse"
+                "en": "Proxies (one per line)",
+                "no": "Proxyer (én per linje)"
               },
               "hint": {
-                "en": "IP of an ESPHome device with bluetooth_proxy (e.g. Everything Presence One) near the lock. Leave empty to use Homey's own Bluetooth.",
-                "no": "IP til en ESPHome-enhet med bluetooth_proxy (f.eks. Everything Presence One) nær låsen. La stå tomt for å bruke Homeys egen Bluetooth."
+                "en": "IP address of each ESPHome Bluetooth proxy (e.g. Everything Presence One), one per line. If they have different encryption keys, write \"IP key\" on the line. The proxy that worked last is tried first. Leave empty to use Homey's own Bluetooth.",
+                "no": "IP-adressen til hver ESPHome Bluetooth-proxy (f.eks. Everything Presence One), én per linje. Har de ulike krypteringsnøkler, skriv «IP nøkkel» på linjen. Proxyen som virket sist prøves først. La stå tomt for å bruke Homeys egen Bluetooth."
               }
             },
             {
@@ -524,12 +524,12 @@
               "type": "password",
               "value": "",
               "label": {
-                "en": "Proxy encryption key",
-                "no": "Proxy krypteringsnøkkel"
+                "en": "Encryption key (all proxies)",
+                "no": "Krypteringsnøkkel (alle proxyer)"
               },
               "hint": {
-                "en": "The api encryption key from ESPHome. In Home Assistant: jq '.data.entries[] | select(.domain==\"esphome\") | {title, host: .data.host, key: .data.noise_psk}' /config/.storage/core.config_entries",
-                "no": "api-krypteringsnøkkelen fra ESPHome. I Home Assistant: jq '.data.entries[] | select(.domain==\"esphome\") | {title, host: .data.host, key: .data.noise_psk}' /config/.storage/core.config_entries"
+                "en": "Used for proxies without their own key on the line. Leave empty if they don't use encryption. In Home Assistant: jq '.data.entries[] | select(.domain==\"esphome\") | {title, host: .data.host, key: .data.noise_psk}' /config/.storage/core.config_entries",
+                "no": "Brukes for proxyer uten egen nøkkel på linjen. La stå tomt hvis de ikke bruker kryptering. I Home Assistant: jq '.data.entries[] | select(.domain==\"esphome\") | {title, host: .data.host, key: .data.noise_psk}' /config/.storage/core.config_entries"
               }
             }
           ]

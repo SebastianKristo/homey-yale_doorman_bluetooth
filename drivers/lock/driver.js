@@ -43,7 +43,9 @@ class YaleLockDriver extends Homey.Driver {
       if (!Number.isInteger(s) || s < 0 || s > 255) throw new Error(this.homey.__('pair.invalid_slot'));
       const host = String(proxyHost || '').trim();
       const encryptionKey = String(proxyKey || '').trim();
-      if (encryptionKey && Buffer.from(encryptionKey, 'base64').length !== 32) {
+      const { parseProxies } = require('../../lib/EspProxy');
+      const keys = [encryptionKey, ...parseProxies(host).map((p) => p.encryptionKey)].filter(Boolean);
+      if (keys.some((k) => Buffer.from(k, 'base64').length !== 32)) {
         throw new Error(this.homey.__('pair.invalid_proxy_key'));
       }
       credentials = {
@@ -83,13 +85,12 @@ class YaleLockDriver extends Homey.Driver {
   }
 
   async listViaProxy(credentials) {
-    const { getProxy } = require('../../lib/EspProxy');
-    const proxy = getProxy({
-      host: credentials.proxyHost,
-      encryptionKey: credentials.proxyKey,
+    const { scanProxies, parseProxies } = require('../../lib/EspProxy');
+    const found = await scanProxies({
+      proxies: parseProxies(credentials.proxyHost, credentials.proxyKey),
+      durationMs: 15000,
       log: (...a) => this.log(...a),
     });
-    const found = await proxy.scan(15000);
     this.log(`Proxy ${credentials.proxyHost} found ${found.length} BLE devices`);
 
     const isYaleAdv = (a) => a.serviceUuids.some((u) => normUuid(u) === SERVICE_UUID)

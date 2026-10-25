@@ -54,10 +54,11 @@ class YaleLockDevice extends Homey.Device {
     this.refreshStatus().catch((err) => this.error('Initial status failed', err.message));
   }
 
+  // List of { host, encryptionKey } from the settings, or null without a proxy
   get proxyConfig() {
-    const host = String(this.getSetting('proxy_host') || '').trim();
-    if (!host) return null;
-    return { host, encryptionKey: String(this.getSetting('proxy_key') || '').trim() };
+    const { parseProxies } = require('../../lib/EspProxy');
+    const proxies = parseProxies(this.getSetting('proxy_host'), String(this.getSetting('proxy_key') || '').trim());
+    return proxies.length ? proxies : null;
   }
 
   get mac() {
@@ -77,8 +78,8 @@ class YaleLockDevice extends Homey.Device {
         slot,
         log: (...a) => this.log(...a),
         openPeripheral: proxy
-          ? () => require('../../lib/EspProxy').connectViaProxy({
-            ...proxy, mac: this.mac, log: (...a) => this.log(...a),
+          ? () => require('../../lib/EspProxy').connectViaProxies({
+            proxies: proxy, mac: this.mac, log: (...a) => this.log(...a),
           })
           : undefined,
       });
@@ -160,10 +161,10 @@ class YaleLockDevice extends Homey.Device {
   }
 
   async proxyManufacturerData() {
-    const { getProxy } = require('../../lib/EspProxy');
-    const proxy = getProxy({ ...this.proxyConfig, log: (...a) => this.log(...a) });
+    const { scanProxies } = require('../../lib/EspProxy');
     const mac = this.mac.replace(/[^0-9a-f]/gi, '').toLowerCase();
-    const found = (await proxy.scan(PROXY_SCAN_MS)).find((a) => a.address.replace(/:/g, '') === mac);
+    const all = await scanProxies({ proxies: this.proxyConfig, durationMs: PROXY_SCAN_MS, log: (...a) => this.log(...a) });
+    const found = all.find((a) => a.address.replace(/:/g, '') === mac);
     return found ? found.manufacturerData : null;
   }
 
