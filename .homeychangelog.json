@@ -156,5 +156,8 @@
   "3.0.0": {
     "en": "Back to the latest code after test builds: ESPHome proxies, UniFi rules, Always connected, who unlocked.",
     "no": "Tilbake til nyeste kode etter testversjoner: ESPHome-proxyer, UniFi-regler, Alltid tilkoblet, hvem låste opp."
+  },
+  "3.1.0": {
+    "en": "new fix"
   }
 }
