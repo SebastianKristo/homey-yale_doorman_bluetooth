@@ -84,5 +84,9 @@
   "1.4.1": {
     "en": "Step-by-step help in pairing, with commands to find the offline key and proxy key in Home Assistant.",
     "no": "Steg-for-steg-hjelp i parringen, med kommandoer for å finne offline-nøkkel og proxy-nøkkel i Home Assistant."
+  },
+  "2.7.0": {
+    "en": "Test build: code from 1.4.1.",
+    "no": "Testversjon: koden fra 1.4.1."
   }
 }
