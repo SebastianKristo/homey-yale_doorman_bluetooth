@@ -163,5 +163,8 @@
   "3.2.0": {
     "en": "More reliable connection over Homey's own Bluetooth: one radio operation at a time, no retry storms, a real rescan when Homey answers from cache.",
     "no": "Mer stabil tilkobling over Homeys egen Bluetooth: én radio-operasjon om gangen, ingen storm av nye forsøk, og et ekte nytt søk når Homey svarer fra hurtigbuffer."
+  },
+  "3.2.1": {
+    "en": "new fix"
   }
 }
