@@ -148,6 +148,8 @@ class YaleLockDevice extends Homey.Device {
     // While connected the lock pushes its state itself, and a scan while a
     // connection is being set up can make Homey's radio drop that connection
     if (this.lock.connected || this.lock.connecting) return;
+    // Lock unreachable recently: don't keep the radio busy with scans
+    if (this.lock.lastFailure && Date.now() - this.lock.lastFailure.at < 60 * 1000) return;
     const md = this.proxyConfig ? await this.proxyManufacturerData() : await this.homeyManufacturerData();
     if (md && this.lastManufacturerData && md !== this.lastManufacturerData) {
       this.log('Advertisement changed, reading status');
@@ -157,7 +159,7 @@ class YaleLockDevice extends Homey.Device {
   }
 
   async homeyManufacturerData() {
-    const adv = await this.homey.ble.find(this.getStore().peripheralUuid);
+    const adv = await this.lock.readAdvertisement();
     return adv && adv.manufacturerData ? Buffer.from(adv.manufacturerData).toString('hex') : null;
   }
 
@@ -240,6 +242,8 @@ class YaleLockDevice extends Homey.Device {
       try {
         result = await fn(this.lock);
       } catch (err) {
+        // A failure shared with another caller was already retried there
+        if (err.coalesced) throw err;
         // One retry with a fresh connection
         this.log('Retrying after error:', err.message);
         await this.lock.disconnect().catch(() => {});
