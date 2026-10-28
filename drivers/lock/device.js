@@ -244,9 +244,11 @@ class YaleLockDevice extends Homey.Device {
       } catch (err) {
         // A failure shared with another caller was already retried there
         if (err.coalesced) throw err;
-        // One retry with a fresh connection
+        // One retry with a fresh connection. Clear the shared failure first,
+        // otherwise this retry would just get the same error back
         this.log('Retrying after error:', err.message);
         await this.lock.disconnect().catch(() => {});
+        this.lock.clearFailure();
         result = await fn(this.lock);
       }
       this.reachable = true;

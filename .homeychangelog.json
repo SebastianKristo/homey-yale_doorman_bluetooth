@@ -166,5 +166,9 @@
   },
   "3.2.1": {
     "en": "new fix"
+  },
+  "3.2.2": {
+    "en": "Fix: a failed first attempt is now really retried (UniFi unlocks failed after one slow handshake). UniFi rules ignore repeats for 30 s.",
+    "no": "Retter: et mislykket første forsøk prøves nå faktisk på nytt (UniFi-opplåsing feilet etter ett tregt håndtrykk). UniFi-regler ignorerer gjentak i 30 s."
   }
 }

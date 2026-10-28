@@ -6,7 +6,8 @@ const { parseUnifiEvent } = require('./lib/unifi');
 
 const METHODS = ['face', 'fingerprint', 'nfc', 'pin', 'other'];
 // UniFi often sends several events for one recognition; unlock once
-const RULE_COOLDOWN_MS = 10 * 1000;
+// (Protect repeats the alarm while the face is still in view, ~every 10 s)
+const RULE_COOLDOWN_MS = 30 * 1000;
 
 function sameToken(a, b) {
   const x = Buffer.from(String(a || ''));
